@@ -1,0 +1,31 @@
+1) create standard Height and width
+2) create display with set standard
+3) create buffer with set standard
+4) create scale factor
+    int windowHeight = al_get_display_height(display);
+    int windowWidth = al_get_display_width(display);
+    float sx = windowWidth / float(WINDOW_W);
+    float sy = windowHeight / float(WINDOW_H);
+    int scale = std::min(sx, sy);
+    int scaleW = WINDOW_W * scale;
+    int scaleH = WINDOW_H * scale;
+    int scaleX = (windowWidth - scaleW) / 2;
+    int scaleY = (windowHeight - scaleH) / 2;
+5) set tatget bitmap and black color
+    al_set_target_bitmap(buffer);
+    al_clear_to_color(al_map_rgb(0, 0, 0));
+6) import value of scales in class map!!
+7) write this in begin of drawmap()
+    al_set_target_bitmap(buffer);
+    al_clear_to_color(al_map_rgb(0, 0, 0));
+    ALLEGRO_BITMAP *bitmap = NULL;
+8) write mode like this
+ case '#': //normal brick
+                bitmap = al_load_bitmap(("../Assets/Tiles/" + tiles + "/Tiles/normalBrick.png").c_str());
+                al_draw_bitmap(bitmap, j * 20, i * 20, 0);
+                al_destroy_bitmap(bitmap);
+                break;
+9) at the and write this:
+    al_set_target_backbuffer(this->display);
+    al_clear_to_color(al_map_rgb(0, 0, 0));
+    al_draw_scaled_bitmap(buffer, 0, 0, 560, 320, scale_x, scale_y, scale_w, scale_h, 0);
