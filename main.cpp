@@ -2,17 +2,16 @@
 #include<allegro5/allegro.h>
 #include<allegro5/allegro_image.h>
 #include "Graphic.h"
-#include <allegro5/allegro_primitives.h>			
-#include <iostream>
-#include<fstream>
 #include<algorithm>
+#include "Mario.h"
+extern int barx, bary; 
 using namespace std;
 enum KEYS{ UP, DOWN, LEFT, RIGHT};
 //x=112 y=88
 int main(int argc, char **argv)
 {
 	int screenWidth=8*30;
-	int screenHeight=8*14;
+	int screenHeight=8*26;
 	bool done = false;
 	bool redraw = true;
 	int FPS = 60;
@@ -44,30 +43,18 @@ int main(int argc, char **argv)
     int scaleY = (windowHeight - scaleH) / 2;
 	al_set_target_bitmap(buffer);
     al_clear_to_color(al_map_rgb(0, 0, 0));
-	al_init_primitives_addon();
 	al_install_keyboard();
 	if(!al_init_image_addon()){cout<<"NUOH FAZIO";return -1;}
 	event_queue = al_create_event_queue();
 	timer = al_create_timer(3.0 / FPS);
 	int matrix[x][y];
-	fstream input;
-        input.open("Map.txt");
-        if (input.is_open())
-        for (int i=0;i<x;i++)
-            for (int j=0;j<y;j++)
-                input >> matrix[i][j];
-	input.close();
+	
 	DonkeyKong dk(0,0);
-		for (int i=0;i<x;i++)
-            for (int j=0;j<y;j++)
-				if(matrix[i][j]==3&&matrix[i][j+1]==0&&matrix[i+2][j]==3){
-					cout<<i<<" "<<j;
-					dk.setX((j+1)*8);
-					dk.setY((i)*8);
-					j=y;
-					i=x;
-				}
-	Graphic manager(matrix,scaleW, scaleH, scaleX, scaleY, buffer, display);
+	Barrel barrel(0,0);
+	Mario mario(/*(rand()%28)*8*/3*8,23*8);
+	//cout<<matrix[23][14]; PRIMA SCALA
+	Graphic manager(scaleW, scaleH, scaleX, scaleY, buffer, display);
+	manager.setDk(dk);
 	int pos_x=0;
 	int pos_y=0;
 	al_register_event_source(event_queue, al_get_keyboard_event_source());
@@ -124,11 +111,10 @@ int main(int argc, char **argv)
 		}
 		else if(ev.type == ALLEGRO_EVENT_TIMER)
 		{
-			pos_y -= keys[UP] * 10; 
-			pos_y += keys[DOWN] * 10;
-			pos_x -= keys[LEFT] * 10;
-			pos_x += keys[RIGHT] * 10;
-
+			mario.moveUp(keys[UP]); 
+			mario.moveDown(keys[DOWN]);
+			mario.moveLeft(keys[LEFT]); 
+			mario.moveRight(keys[RIGHT]);
 			redraw = true;
 		}
 		if(redraw && al_is_event_queue_empty(event_queue))
@@ -136,6 +122,7 @@ int main(int argc, char **argv)
 			redraw = false;
 			manager.drawMap();
 			manager.DrawDK(dk);
+			manager.DrawMario(mario,pos_x,pos_y);
 			//al_draw_porcofazioh;
             al_flip_display();
 		}
