@@ -6,13 +6,15 @@
 #include <iostream>
 #include<fstream>
 #include<algorithm>
+#include "Mario.h"
+extern int barx, bary; 
 using namespace std;
 enum KEYS{ UP, DOWN, LEFT, RIGHT};
 //x=112 y=88
 int main(int argc, char **argv)
 {
 	int screenWidth=8*30;
-	int screenHeight=8*14;
+	int screenHeight=8*26;
 	bool done = false;
 	bool redraw = true;
 	int FPS = 60;
@@ -58,15 +60,22 @@ int main(int argc, char **argv)
                 input >> matrix[i][j];
 	input.close();
 	DonkeyKong dk(0,0);
+	Barrel barrel(0,0);
+	Mario mario(/*(rand()%28)*8*/3*8,23*8);
 		for (int i=0;i<x;i++)
             for (int j=0;j<y;j++)
 				if(matrix[i][j]==3&&matrix[i][j+1]==0&&matrix[i+2][j]==3){
-					cout<<i<<" "<<j;
+					//cout<<i<<" "<<j;
 					dk.setX((j+1)*8);
 					dk.setY((i)*8);
+					cout<<dk.getX()/8;
+					cout<<dk.getY()/8;
+					//barrel.setX((j+1)/8);
+					//barrel.setY()
 					j=y;
 					i=x;
 				}
+	//cout<<matrix[23][14]; PRIMA SCALA
 	Graphic manager(matrix,scaleW, scaleH, scaleX, scaleY, buffer, display);
 	int pos_x=0;
 	int pos_y=0;
@@ -136,6 +145,7 @@ int main(int argc, char **argv)
 			redraw = false;
 			manager.drawMap();
 			manager.DrawDK(dk);
+			manager.DrawMario(mario);
 			//al_draw_porcofazioh;
             al_flip_display();
 		}

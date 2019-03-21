@@ -1,8 +1,10 @@
-#include "allegro5/allegro5.h"
 #include <string>
 #include "DonkeyKong.h"
-
-const int x = 14;
+#include "Barrel.h"
+#include "Mario.h"
+#ifndef GRAPHIC_H
+#define GRAPHIC_H
+const int x = 26;
 const int y = 30; 
 
 class Graphic{
@@ -67,43 +69,26 @@ class Graphic{
                 }   
                 void DrawDK(DonkeyKong& dk){
                         al_set_target_bitmap(buffer);
-                        dk.increaseCont();
-                        if(dk.getCont()<=10){
-                                bmp=al_load_bitmap("Sprites/DK1.png");
-                                al_draw_bitmap(bmp,dk.getX(),dk.getY(),0);
-                                al_destroy_bitmap(bmp);
-                        }
-                        else if(dk.getCont()>10&&dk.getCont()<=20){
-                                bmp=al_load_bitmap("Sprites/DK2.png");
-                                al_draw_bitmap(bmp,dk.getX(),dk.getY(),0);
-                                al_destroy_bitmap(bmp);
-                        }
-                        else if(dk.getCont()>20&&dk.getCont()<=30){
-                                bmp=al_load_bitmap("Sprites/DK3.png");
-                                al_draw_bitmap(bmp,dk.getX(),dk.getY(),0);
-                                al_destroy_bitmap(bmp);
-                        }
-                        else if(dk.getCont()>30&&dk.getCont()<=40)
-                        {
-                                bmp=al_load_bitmap("Sprites/DK4.png");
-                                al_draw_bitmap(bmp,dk.getX(),dk.getY(),0);
-                                al_destroy_bitmap(bmp);
-                                
-                        }
-                        else{
-                                bmp=al_load_bitmap("Sprites/DK5.png");
-                                al_draw_bitmap(bmp,dk.getX(),dk.getY(),0);
-                                al_destroy_bitmap(bmp);
-                                //draw barile;
-                        }
-                        
+                        dk.Draw();
                         al_set_target_backbuffer(this->display);
                         al_clear_to_color(al_map_rgb(0, 0, 0));
                         al_draw_scaled_bitmap(buffer, 0, 0,(y*8) ,(x*8), scale_x, scale_y, scale_w, scale_h, 0);
 
                 }
-                void DrawBarile(DonkeyKong& dk){
+                 void DrawMario(Mario& m){
                         al_set_target_bitmap(buffer);
+                        m.Draw();
+                        al_set_target_backbuffer(this->display);
+                        al_clear_to_color(al_map_rgb(0, 0, 0));
+                        al_draw_scaled_bitmap(buffer, 0, 0,(y*8) ,(x*8), scale_x, scale_y, scale_w, scale_h, 0);
+                }
+                void DrawBarrel(){
+                        al_set_target_bitmap(buffer);
+                        
+                        al_set_target_backbuffer(this->display);
+                        al_clear_to_color(al_map_rgb(0, 0, 0));
+                        al_draw_scaled_bitmap(buffer, 0, 0,(y*8) ,(x*8), scale_x, scale_y, scale_w, scale_h, 0);
                 }
                 ~Graphic(){}   
 };
+#endif
