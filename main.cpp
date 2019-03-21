@@ -10,6 +10,7 @@ enum KEYS{ UP, DOWN, LEFT, RIGHT};
 //x=112 y=88
 int main(int argc, char **argv)
 {
+	cout << "ciao";
 	int screenWidth=8*30;
 	int screenHeight=8*26;
 	bool done = false;
