@@ -10,8 +10,8 @@ using namespace std;
 //x=112 y=88
 int main(int argc, char **argv)
 {
-	int screenWidth=pixel*30; //30 w
-	int screenHeight=pixel*21; //26 h
+	int screenWidth=pixel*37; //30 w
+	int screenHeight=pixel*24; //26 h
 	bool done = false;
 	bool redraw = true;
 	int FPS = 27;
@@ -72,6 +72,9 @@ int main(int argc, char **argv)
 			{
 				case ALLEGRO_KEY_UP:
 					keys[UP] = true;
+					keys[DOWN]=false;
+					keys[RIGHT]=false;
+					keys[LEFT]=false;
 					break;
 				case ALLEGRO_KEY_DOWN:
 					keys[DOWN] = true;

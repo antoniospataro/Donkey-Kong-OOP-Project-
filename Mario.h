@@ -48,9 +48,9 @@ class Mario: public Entity{
         void moveUp(){
             cont++;
             if(cont==1)
-                bip=al_load_bitmap("Sprites/Walk1.png");
+                bip=al_load_bitmap("Sprites/Climbing1.png");
             else{
-                bip=al_load_bitmap("Sprites/Walk2.png");cont=0;}
+                bip=al_load_bitmap("Sprites/Climbing2.png");cont=0;}
             al_draw_bitmap(bip,getX(),getY(),0);
         }
         void moveRight(){

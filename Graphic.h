@@ -98,14 +98,13 @@ class Graphic{
                         al_set_target_bitmap(buffer);
                         if(m.getFall())
                         {
-                                m.setY(m.getY()+16);
+                                m.setY(m.getY()+8);
                                 bmp=al_load_bitmap("Sprites/Walk0.png");
                                 al_draw_bitmap(bmp,m.getX(),m.getY(),ALLEGRO_FLIP_HORIZONTAL);
                                 if(matrix[m.getY()/16+1][m.getX()/16]==1)
-                                        m.setFall(false);
-                                return;
+                                      m.setFall(false);
                         }
-                        if(m.getUp()){
+                        else if(m.getUp()&&m.getFall()==false){
                                 if(matrix[m.getY()/16][m.getX()/16]==2 || matrix[m.getY()/16][m.getX()/16]==1){
                                         m.setY(m.getY()-16);
                                         m.moveUp();
@@ -119,7 +118,7 @@ class Graphic{
                                 }
                                 m.setUp(false);
                         }
-                        if(m.getRight())
+                        else if(m.getRight()&&m.getFall()==false)
                         {
                                 if(m.getX()!=(y*16)-16){
                                         m.setX(m.getX()+16);
@@ -131,7 +130,7 @@ class Graphic{
                                         m.Draw();
                                 m.setRight(false);
                         }
-                        if(m.getLeft())
+                        else if(m.getLeft()&&m.getFall()==false)
                         {
                                 if(m.getX()!=0){
                                         m.setX(m.getX()-16);
