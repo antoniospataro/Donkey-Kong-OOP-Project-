@@ -21,7 +21,7 @@ class DonkeyKong: public Entity{
             cont++;
             if(cont==1)
                 lancia=false;
-            if(cont==12&& petto!=(EASY-1)){
+            if(cont==6&& petto!=(EASY-1)){
                 cont=0;
                 petto=rand() % EASY;
             }
@@ -29,22 +29,22 @@ class DonkeyKong: public Entity{
         }
         void Draw(){
             increaseCont();
-            if(getCont()<=6){
+            if(getCont()<=3){
                                 bip=al_load_bitmap("Sprites/DK1.png");
                                 al_draw_bitmap(bip,getX(),getY(),0);
                                 al_destroy_bitmap(bip);
                         }
-                        else if(getCont()>6&&getCont()<=12){
+                        else if(getCont()>3&&getCont()<=6){
                                 bip=al_load_bitmap("Sprites/DK2.png");
                                 al_draw_bitmap(bip,getX(),getY(),0);
                                 al_destroy_bitmap(bip);
                         }
-                        else if(getCont()>12&&getCont()<=18){
+                        else if(getCont()>6&&getCont()<=9){
                                 bip=al_load_bitmap("Sprites/DK3.png");
                                 al_draw_bitmap(bip,getX(),getY(),0);
                                 al_destroy_bitmap(bip);
                         }
-                        else if(getCont()>18&&getCont()<=24)
+                        else if(getCont()>9&&getCont()<=12)
                         {
                                 bip=al_load_bitmap("Sprites/DK4.png");
                                 al_draw_bitmap(bip,getX(),getY(),0);
