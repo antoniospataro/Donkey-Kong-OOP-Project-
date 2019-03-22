@@ -6,18 +6,17 @@
 #include "Mario.h"
 extern int barx, bary; 
 using namespace std;
-enum KEYS{ UP, DOWN, LEFT, RIGHT};
+//enum KEYS{ UP, DOWN, LEFT, RIGHT};
 //x=112 y=88
 int main(int argc, char **argv)
 {
-	cout << "ciao";
-	int screenWidth=8*30;
-	int screenHeight=8*26;
+	int screenWidth=pixel*30; //30 h
+	int screenHeight=pixel*26; //26 
 	bool done = false;
 	bool redraw = true;
 	int FPS = 60;
 	bool keys[4] = {false, false, false, false};
-
+	cout<<x<<" "<<y;
 	ALLEGRO_EVENT_QUEUE *event_queue = NULL;
 	ALLEGRO_TIMER *timer = NULL;
 	if(!al_init())										//initialize Allegro
@@ -52,9 +51,9 @@ int main(int argc, char **argv)
 	
 	DonkeyKong dk(0,0);
 	Barrel barrel(0,0);
-	Mario mario(/*(rand()%28)*8*/3*8,23*8);
+	Mario mario(/*(rand()%28)*8*/3*pixel,24*pixel);
 	//cout<<matrix[23][14]; PRIMA SCALA
-	Graphic manager(scaleW, scaleH, scaleX, scaleY, buffer, display);
+	Graphic manager(1,scaleW, scaleH, scaleX, scaleY, buffer, display);
 	manager.setDk(dk);
 	int pos_x=0;
 	int pos_y=0;
@@ -112,18 +111,24 @@ int main(int argc, char **argv)
 		}
 		else if(ev.type == ALLEGRO_EVENT_TIMER)
 		{
-			mario.moveUp(keys[UP]); 
-			mario.moveDown(keys[DOWN]);
-			mario.moveLeft(keys[LEFT]); 
-			mario.moveRight(keys[RIGHT]);
+			if(keys[UP])
+				mario.setUp(true);
+			if(keys[DOWN]) 
+				mario.setDown(true);
+			if(keys[LEFT])
+				mario.setLeft(true);
+			if(keys[RIGHT])
+				mario.setRight(true);
 			redraw = true;
 		}
+		if(mario.getFall())
+			redraw=true;
 		if(redraw && al_is_event_queue_empty(event_queue))
 		{
 			redraw = false;
 			manager.drawMap();
-			manager.DrawDK(dk);
-			manager.DrawMario(mario,pos_x,pos_y);
+			manager.drawDK(dk);
+			manager.drawMario(mario);
 			//al_draw_porcofazioh;
             al_flip_display();
 		}
