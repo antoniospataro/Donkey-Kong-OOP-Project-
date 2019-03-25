@@ -112,6 +112,7 @@ class Graphic{
                                         al_draw_bitmap(bmp,m.getX(),m.getY(),0);
                                         m.setFall(true);
                                 }
+                                al_destroy_bitmap(bmp);
                         }
                         else if(m.getFall()&&m.getReverse())
                         {
@@ -155,6 +156,7 @@ class Graphic{
                                                 al_draw_bitmap(bmp,m.getX(),m.getY(),0);
                                         }
                                 }
+                                al_destroy_bitmap(bmp);
                                 m.setUp(false);
                         }
                         else if(m.getDown()&&m.getFall()==false){
@@ -169,6 +171,7 @@ class Graphic{
                                                 m.setCont(0);
                                         }
                                         al_draw_bitmap(bmp,m.getX(),m.getY(),0);
+                                        al_destroy_bitmap(bmp);
                                 }
                                 else 
                                         m.Draw(true);
@@ -178,8 +181,9 @@ class Graphic{
                         else if(m.getRight()&&m.getFall()==false/*&&!m.getScale()*/)
                         {
                                 m.setReverse(true);
-                                
                                 if(m.getX()!=(y*16)-16/*&&m.getY()%16==0*/)/*DIVERSO DA FINE SCHERMO*/{
+                                        if(m.getY()%16==0 && matrix[m.getY()/16+1][m.getX()/16]==1 && m.getScale())
+                                                m.setScale(false);
                                         if(!m.getScale()){
                                                 m.setX(m.getX()+8);
                                                 m.setCont(m.getCont()+1);
@@ -202,6 +206,7 @@ class Graphic{
                                                 if(m.getScale())
                                                         m.setScale(false);
                                         }
+                                        al_destroy_bitmap(bmp);
                                 }
                                 else if(m.getX()==(y*16)-16)
                                         m.Draw(true);
@@ -211,6 +216,8 @@ class Graphic{
                         {
                                 m.setReverse(false);
                                 if(m.getX()!=0/*&&m.getY()%16==0*/)/*DIVERSO DA FINE SCHERMO SINISTRO*/{
+                                        if(m.getY()%16==0 && matrix[m.getY()/16+1][m.getX()/16]==1 && m.getScale())
+                                                m.setScale(false);
                                         if(!m.getScale()){
                                                 m.setX(m.getX()-8);
                                                 m.setCont(m.getCont()+1);
@@ -229,12 +236,14 @@ class Graphic{
                                                         bmp=al_load_bitmap("Sprites/Climbing2.png");
                                                         m.setCont(0);}
                                         }        
-                                        al_draw_bitmap(bmp,m.getX(),m.getY(),0);
                                         if((m.getX()%16==0 && matrix[(m.getY()/16)+1][m.getX()/16]==0)||(m.getX()%16==0 && m.getY()%16!=0 && matrix[m.getY()/16][m.getX()/16]==0 && matrix[m.getY()/16+1][m.getX()/16]==1 && matrix[m.getY()/16+2][m.getX()/16]==0)){
-                                                m.setFall(true);
-                                                if(m.getScale())
-                                                        m.setScale(false);
+                                              m.setFall(true);
+                                              if(m.getScale())
+                                                      m.setScale(false);
                                         }
+                                        al_draw_bitmap(bmp,m.getX(),m.getY(),0);
+                                        al_destroy_bitmap(bmp);
+
                                 }
                                 else if(m.getX()==0)
                                         m.Draw(false);

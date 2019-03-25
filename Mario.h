@@ -43,6 +43,7 @@ class Mario: public Entity{
                 al_draw_bitmap(bip,getX(),getY(),ALLEGRO_FLIP_HORIZONTAL);
             else
                 al_draw_bitmap(bip,getX(),getY(),0);
+            al_destroy_bitmap(bip);
             }
               
 };

@@ -109,20 +109,37 @@ int main(int argc, char **argv)
 		{
 			done = true;
 		}
-		else if(!mario.getFall()){
+		
 			if(ev.type == ALLEGRO_EVENT_TIMER)
 			{
-				if(keys[UP])
+				if(keys[UP]){
 					mario.setUp(true);
-				if(keys[DOWN]) 
+					mario.setDown(false);
+					mario.setLeft(false);
+					mario.setRight(false);}
+				if(keys[DOWN]){
 					mario.setDown(true);
-				if(keys[LEFT])
+					mario.setUp(false);
+					mario.setLeft(false);
+					mario.setRight(false);}
+				if(keys[LEFT]){
 					mario.setLeft(true);
-				if(keys[RIGHT])
+					mario.setDown(false);
+					mario.setUp(false);
+					mario.setRight(false);}
+				if(keys[RIGHT]){
 					mario.setRight(true);
+					mario.setLeft(false);
+					mario.setDown(false);
+					mario.setUp(false);}
+				if(mario.getFall()){
+					mario.setLeft(false);
+					mario.setDown(false);
+					mario.setUp(false);
+					mario.setRight(false);}
 				redraw = true;
 			}
-		}
+		
 		else if(mario.getFall())
 			redraw=true;
 		if(redraw && al_is_event_queue_empty(event_queue))
