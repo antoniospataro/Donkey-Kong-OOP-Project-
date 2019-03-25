@@ -61,9 +61,9 @@ int main(int argc, char **argv)
 	al_register_event_source(event_queue, al_get_display_event_source(display));
 	al_register_event_source(event_queue, al_get_timer_event_source(timer));
 	al_start_timer(timer);
+	ALLEGRO_EVENT ev;
 	while(!done)
 	{
-		ALLEGRO_EVENT ev;
 		al_wait_for_event(event_queue, &ev);
 
 		if(ev.type == ALLEGRO_EVENT_KEY_DOWN)
@@ -139,9 +139,6 @@ int main(int argc, char **argv)
 					mario.setRight(false);}
 				redraw = true;
 			}
-		
-		else if(mario.getFall())
-			redraw=true;
 		if(redraw && al_is_event_queue_empty(event_queue))
 		{
 			redraw = false;
