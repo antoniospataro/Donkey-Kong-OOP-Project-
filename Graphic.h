@@ -10,7 +10,7 @@ using namespace std;
 int x;
 int y; 
 int pixel=16;
-enum KEYS{ UP, DOWN, LEFT, RIGHT};
+enum KEYS{ UP, DOWN, LEFT, RIGHT, ENTER, ESCAPE};
 class Graphic{
         private: 
                 int matrix[100][100];
@@ -43,6 +43,17 @@ class Graphic{
                         this->scale_y = scale_y;
                         this->buffer = buffer;
                         this->display = display;
+                }
+                void drawMenu ()
+                {
+                        al_set_target_bitmap(buffer);
+                        bmp = al_load_bitmap("Sprites/dk.png");
+                        al_draw_bitmap(bmp,(pixel*x)/2,(pixel*y)/8,0);
+                        al_destroy_bitmap(bmp);
+
+                        al_set_target_backbuffer(this->display);
+                        al_clear_to_color(al_map_rgb(0, 0, 0));
+                        al_draw_scaled_bitmap(buffer, 0, 0,(y*pixel) ,(x*pixel), scale_x, scale_y, scale_w, scale_h, 0);
                 }
                 void setDk(DonkeyKong& dk){
                         for (int i=0;i<x;i++)

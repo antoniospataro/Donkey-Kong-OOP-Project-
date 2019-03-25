@@ -12,37 +12,38 @@ int main(int argc, char **argv)
 {
 	int screenWidth=pixel*37; //30 w
 	int screenHeight=pixel*24; //26 h
-	bool done = false;
+	bool Esci = false;
+	bool menu = true;
 	bool redraw = true;
 	int FPS = 30; //30
-	bool keys[4] = {false, false, false, false};
+	bool keys[6] = {false, false, false, false, false, false};
 	//cout<<x<<" "<<y;
 	ALLEGRO_EVENT_QUEUE *event_queue = NULL;
 	ALLEGRO_TIMER *timer = NULL;
 	if(!al_init())										//initialize Allegro
 		return -1;
-    al_set_new_display_flags(ALLEGRO_FULLSCREEN_WINDOW);
+    	al_set_new_display_flags(ALLEGRO_FULLSCREEN_WINDOW);
 	ALLEGRO_DISPLAY *display = al_create_display(screenWidth,screenHeight);
-    if(!display){
+   	if(!display){
         cout << "Fatal error, unable to create a display";
         return -1;
-    }
-    ALLEGRO_BITMAP *buffer = al_create_bitmap(screenWidth,screenHeight);
-    if(!buffer){
+    	}
+    	ALLEGRO_BITMAP *buffer = al_create_bitmap(screenWidth,screenHeight);
+    	if(!buffer){
         cout << "Fatal error, unable to create a buffer";
         return -1;
-    }
+    	}
 	int windowHeight = al_get_display_height(display);
-    int windowWidth = al_get_display_width(display);
-    float sx = windowWidth / float(screenWidth);
-    float sy = windowHeight / float(screenHeight);
-    int scale = std::min(sx, sy);
-    int scaleW = screenWidth * scale;
-    int scaleH = screenHeight * scale;
-    int scaleX = (windowWidth - scaleW) / 2;
-    int scaleY = (windowHeight - scaleH) / 2;
+    	int windowWidth = al_get_display_width(display);
+    	float sx = windowWidth / float(screenWidth);
+    	float sy = windowHeight / float(screenHeight);
+    	int scale = std::min(sx, sy);
+    	int scaleW = screenWidth * scale;
+    	int scaleH = screenHeight * scale;
+    	int scaleX = (windowWidth - scaleW) / 2;
+    	int scaleY = (windowHeight - scaleH) / 2;
 	al_set_target_bitmap(buffer);
-    al_clear_to_color(al_map_rgb(0, 0, 0));
+ 	al_clear_to_color(al_map_rgb(0, 0, 0));
 	al_install_keyboard();
 	if(!al_init_image_addon()){cout<<"NUOH FAZIO";return -1;}
 	event_queue = al_create_event_queue();
@@ -62,7 +63,76 @@ int main(int argc, char **argv)
 	al_register_event_source(event_queue, al_get_timer_event_source(timer));
 	al_start_timer(timer);
 	ALLEGRO_EVENT ev;
-	while(!done)
+
+	while (menu)
+	{
+		al_wait_for_event(event_queue,&ev);
+
+		if (ev.type == ALLEGRO_EVENT_KEY_DOWN)
+		{
+			switch (ev.keyboard.keycode)
+			{
+				case ALLEGRO_KEY_UP:
+					keys[UP] = true;
+					break;
+				case ALLEGRO_KEY_DOWN:
+					keys[DOWN] = true;
+					break;
+				case ALLEGRO_KEY_ENTER:  
+					keys[ENTER] = true;
+					break;
+				default:
+					break;
+			}
+		}
+		else if (ev.type == ALLEGRO_EVENT_KEY_UP)
+		{
+			switch (ev.keyboard.keycode)
+			{
+				case ALLEGRO_KEY_UP:
+					keys[UP] = false;
+					break;
+				case ALLEGRO_KEY_DOWN:
+					keys[DOWN] = false;
+					break;
+				case ALLEGRO_KEY_ESCAPE:
+					keys[ESCAPE] = true;
+					break;
+				default:
+					break;
+			}
+		}
+
+		else if(ev.type == ALLEGRO_EVENT_TIMER)
+		{
+			if (keys[ENTER])
+			{
+				menu = false;
+			}
+			redraw = true;
+		}
+		else if (ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
+		{
+			menu = false;
+			Esci = true;
+		}
+		if (keys[ESCAPE])
+		{
+			menu = false;
+			Esci = true;
+		}
+
+		else if (redraw && al_is_event_queue_empty(event_queue))
+		{
+			redraw = false;
+			manager.drawMenu();
+			al_flip_display();
+		}
+
+	}
+
+
+	while(!Esci)
 	{
 		al_wait_for_event(event_queue, &ev);
 
@@ -101,13 +171,13 @@ int main(int argc, char **argv)
 					keys[LEFT] = false;
 					break;
 				case ALLEGRO_KEY_ESCAPE:
-					done = true;
+					Esci = true;
 					break;
 			}
 		}
 		else if(ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
 		{
-			done = true;
+			Esci = true;
 		}
 		
 			if(ev.type == ALLEGRO_EVENT_TIMER)
