@@ -14,9 +14,9 @@ int main(int argc, char **argv)
 	int screenHeight=pixel*24; //26 h
 	bool done = false;
 	bool redraw = true;
-	int FPS = 27;
+	int FPS = 30; //30
 	bool keys[4] = {false, false, false, false};
-	cout<<x<<" "<<y;
+	//cout<<x<<" "<<y;
 	ALLEGRO_EVENT_QUEUE *event_queue = NULL;
 	ALLEGRO_TIMER *timer = NULL;
 	if(!al_init())										//initialize Allegro
@@ -71,10 +71,7 @@ int main(int argc, char **argv)
 			switch(ev.keyboard.keycode)
 			{
 				case ALLEGRO_KEY_UP:
-					keys[UP] = true;
-					keys[DOWN]=false;
-					keys[RIGHT]=false;
-					keys[LEFT]=false;
+					keys[UP] = true;			
 					break;
 				case ALLEGRO_KEY_DOWN:
 					keys[DOWN] = true;
@@ -112,19 +109,21 @@ int main(int argc, char **argv)
 		{
 			done = true;
 		}
-		else if(ev.type == ALLEGRO_EVENT_TIMER)
-		{
-			if(keys[UP])
-				mario.setUp(true);
-			if(keys[DOWN]) 
-				mario.setDown(true);
-			if(keys[LEFT])
-				mario.setLeft(true);
-			if(keys[RIGHT])
-				mario.setRight(true);
-			redraw = true;
+		else if(!mario.getFall()){
+			if(ev.type == ALLEGRO_EVENT_TIMER)
+			{
+				if(keys[UP])
+					mario.setUp(true);
+				if(keys[DOWN]) 
+					mario.setDown(true);
+				if(keys[LEFT])
+					mario.setLeft(true);
+				if(keys[RIGHT])
+					mario.setRight(true);
+				redraw = true;
+			}
 		}
-		if(mario.getFall())
+		else if(mario.getFall())
 			redraw=true;
 		if(redraw && al_is_event_queue_empty(event_queue))
 		{

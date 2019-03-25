@@ -12,58 +12,37 @@ class Mario: public Entity{
         bool left;
         bool down;
         bool up;
+        bool scale;
+        bool reverse;
+        bool jump;
     public:
-        Mario(const int& x=0,const int& y=0):Entity(x,y),cont(0),lancia(0),fall(false),right(false),left(false),down(false){srand((unsigned)time(NULL));}
-        int getCont(){return cont;}
+        Mario(const int& x=0,const int& y=0):Entity(x,y),cont(0),lancia(0),scale(false),fall(false),right(false),left(false),down(false){srand((unsigned)time(NULL));}
 
+        void setJump(bool ok){jump=ok;}
+        void setReverse(bool ok){reverse=ok;}
+        void setScale(int c){scale=c;}
+        void setCont(int c){cont=c;}
         void setFall(bool ok){fall=ok;}
         void setRight(bool ok){right=ok;}
         void setLeft(bool ok){left=ok;}
         void setDown(bool ok){down=ok;}
         void setUp(bool ok){up=ok;}
+        bool getJump(){return jump;}
+        bool getReverse(){return reverse;}
+        int getCont(){return cont;}
         bool getFall(){return fall;}
         bool getDown(){return down;}
         bool getRight(){return right;}
         bool getLeft(){return left;}
         bool getUp(){return up;}
+        bool getScale(){return scale;}
 
-        void moveLeft(){
-            cont++;
-            if(cont==1)
-                bip=al_load_bitmap("Sprites/Walk1.png");
-            else{
-                bip=al_load_bitmap("Sprites/Walk2.png");cont=0;}
-            al_draw_bitmap(bip,getX(),getY(),0);
-
-        }
-
-        void moveDown(){
-            cont++;
-            if(cont==1)
-                bip=al_load_bitmap("Sprites/Climbing1.png");
-            else{
-                bip=al_load_bitmap("Sprites/Climbing2.png");cont=0;}
-            al_draw_bitmap(bip,getX(),getY(),0);
-        }
-        void moveUp(){
-            cont++;
-            if(cont==1)
-                bip=al_load_bitmap("Sprites/Climbing1.png");
-            else{
-                bip=al_load_bitmap("Sprites/Climbing2.png");cont=0;}
-            al_draw_bitmap(bip,getX(),getY(),0);
-        }
-        void moveRight(){
-            cont++;
-            if(cont==1)
-                bip=al_load_bitmap("Sprites/Walk1.png");
-            else{
-                bip=al_load_bitmap("Sprites/Walk2.png");cont=0;}
-            al_draw_bitmap(bip,getX(),getY(),ALLEGRO_FLIP_HORIZONTAL);
-        }
-        void Draw(){
+        void Draw(bool ok){
             bip=al_load_bitmap("Sprites/Walk0.png");
-            al_draw_bitmap(bip,getX(),getY(),ALLEGRO_FLIP_HORIZONTAL);
+            if(ok)
+                al_draw_bitmap(bip,getX(),getY(),ALLEGRO_FLIP_HORIZONTAL);
+            else
+                al_draw_bitmap(bip,getX(),getY(),0);
             }
               
 };
