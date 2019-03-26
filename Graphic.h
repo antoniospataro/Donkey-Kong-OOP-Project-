@@ -10,7 +10,7 @@ using namespace std;
 int x;
 int y; 
 int pixel=16;
-enum KEYS{ UP, DOWN, LEFT, RIGHT};
+enum KEYS{ UP, DOWN, LEFT, RIGHT, SPACE};
 class Graphic{
         private: 
                 int matrix[100][100];
@@ -98,88 +98,99 @@ class Graphic{
                         al_set_target_bitmap(buffer);
                         if(m.getJump())
                         {
-                                if(m.getReverse()){
-                                        m.setY(m.getY()-8);
-                                        m.setJump(false);
-                                        bmp=al_load_bitmap("Sprites/Walk2.png");
+                                if(m.getSpace())
+                                        m.setSpace(false);
+                                m.setJmp(m.getJmp()+1);
+                                bmp=al_load_bitmap("Sprites/Walk2.png");
+                                if(m.getRight())
+                                {
+                                        if(m.getJmp()!=2&&m.getX()!=y*pixel-16){
+                                                m.setY(m.getY()-8);
+                                                m.setX(m.getX()+8); }                                              
                                         al_draw_bitmap(bmp,m.getX(),m.getY(),ALLEGRO_FLIP_HORIZONTAL);
-                                        m.setFall(true);
+                                }
+                                else if(m.getLeft()&&m.getX()!=0){
+                                        if(m.getJmp()!=2){/*togliere se si vuole lasciare in aria un solo frame*/
+                                                m.setY(m.getY()-8);
+                                                m.setX(m.getX()-8);}
+                                        al_draw_bitmap(bmp,m.getX(),m.getY(),0);
+
                                 }
                                 else{
-                                        m.setY(m.getY()-8);
-                                        m.setJump(false);
-                                        bmp=al_load_bitmap("Sprites/Walk2.png");
-                                        al_draw_bitmap(bmp,m.getX(),m.getY(),0);
-                                        m.setFall(true);
+                                        if(m.getJmp()!=2) /*togliere se si vuole lasciare in aria un solo frame*/
+                                                m.setY(m.getY()-8);
+                                        if(m.getReverse())
+                                                al_draw_bitmap(bmp,m.getX(),m.getY(),ALLEGRO_FLIP_HORIZONTAL);
+                                        else
+                                                al_draw_bitmap(bmp,m.getX(),m.getY(),0);
                                 }
+                                if(m.getJmp()==2){ /*togliere se si vuole lasciare in aria un solo frame*/
+                                        m.setJump(false);}
+                                m.setFall(true);
                                 al_destroy_bitmap(bmp);
                         }
                         else if(m.getFall()&&m.getReverse())
                         {
+                                m.setJmp(m.getJmp()+1);
+                                if(m.getSpace())
+                                        m.setSpace(false);
                                 m.setY(m.getY()+8);
+                                if(m.getRight()&&m.getX()!=(y*16)-16&&(m.getJmp()==3||m.getJmp()==4)){
+                                        m.setX(m.getX()+8);
+                                        m.setRight(false);}
+                                else if(m.getLeft()&&m.getX()!=0&&(m.getJmp()==3||m.getJmp()==4)){
+                                        m.setX(m.getX()-8);
+                                        m.setLeft(false);}
                                 m.Draw(true);
-                                if(matrix[m.getY()/16+1][m.getX()/16]==1)
-                                      m.setFall(false);
+                                if(m.getY()%16==0&&matrix[m.getY()/16+1][m.getX()/16]==1){
+                                      m.setFall(false);m.setJmp(0);}
                         }
                         else if(m.getFall()&&m.getReverse()==false){
+                                m.setJmp(m.getJmp()+1);
+                                if(m.getSpace())
+                                        m.setSpace(false);
                                 m.setY(m.getY()+8);
+                                if(m.getRight()&&m.getX()!=(y*16)-16&&(m.getJmp()==3||m.getJmp()==4)){
+                                        m.setX(m.getX()+8);
+                                        m.setRight(false);}
+                                else if(m.getLeft()&&m.getX()!=0&&(m.getJmp()==3||m.getJmp()==4)){
+                                        m.setX(m.getX()-8);
+                                        m.setLeft(false);}
                                 m.Draw(false);
-                                if(matrix[m.getY()/16+1][m.getX()/16]==1)
-                                      m.setFall(false);
+                                if(m.getY()%16==0&&matrix[m.getY()/16+1][m.getX()/16]==1){
+                                      m.setFall(false);m.setJmp(0);}
                         }
-                        else if(m.getUp()&&m.getFall()==false){
-                                if(/*sm.getX()%16==0&&*/((matrix[m.getY()/16][m.getX()/16]==2 || matrix[m.getY()/16][m.getX()/16]==1)   || (matrix[(m.getY()+8)/16][m.getX()/16]==2 || matrix[(m.getY()+8)/16][m.getX()/16]==1))||(m.getX()%16!=0&&((matrix[m.getY()/16][m.getX()/16+1]==2 || matrix[m.getY()/16][m.getX()/16+1]==1)   || (matrix[(m.getY()+8)/16][m.getX()/16+1]==2 || matrix[(m.getY()+8)/16][m.getX()/16+1]==1)))){
-                                        
-                                        m.setScale(true);
-                                        m.setY(m.getY()-8);
-                                        m.setCont(m.getCont()+1);
-                                        if(m.getCont()==1)
-                                                bmp=al_load_bitmap("Sprites/Climbing1.png");
-                                        else{
-                                                bmp=al_load_bitmap("Sprites/Climbing2.png");
-                                                m.setCont(0);
-                                        }
-                                        al_draw_bitmap(bmp,m.getX(),m.getY(),0);
-                                }
-                                else
-                                {
+                        else if(m.getSpace()){
+                                m.setSpace(false);
+                                if(m.getFall()==false&&m.getJump()==false){
                                         m.setJump(true);
-                                       // cout<<m.getX()/16<<" "<<m.getY()/16;
+                                        // cout<<m.getX()/16<<" "<<m.getY()/16;
                                         if(m.getReverse()){
-                                                m.setY(m.getY()-8);
+                                                if(m.getRight()&&m.getX()!=(y*16)-16){
+                                                        m.setY(m.getY()-8);
+                                                        m.setX(m.getX()+8);
+                                                }
+                                                else 
+                                                        m.setY(m.getY()-8);                                               
                                                 bmp=al_load_bitmap("Sprites/Walk2.png");
                                                 al_draw_bitmap(bmp,m.getX(),m.getY(),ALLEGRO_FLIP_HORIZONTAL);
                                         }
                                         else{
-                                                m.setY(m.getY()-8);
+                                                if(m.getLeft()&&m.getX()!=0){
+                                                        m.setY(m.getY()-8);
+                                                        m.setX(m.getX()-8);
+                                                }
+                                                else 
+                                                         m.setY(m.getY()-8);  
                                                 bmp=al_load_bitmap("Sprites/Walk2.png");
                                                 al_draw_bitmap(bmp,m.getX(),m.getY(),0);
                                         }
-                                }
-                                al_destroy_bitmap(bmp);
-                                m.setUp(false);
-                        }
-                        else if(m.getDown()&&m.getFall()==false){
-                                if((matrix[m.getY()/16][m.getX()/16]==2&&matrix[m.getY()/16+1][m.getX()/16]!=1)||(matrix[m.getY()/16][m.getX()/16]==0&&matrix[m.getY()/16+1][m.getX()/16]==1&&matrix[m.getY()/16+2][m.getX()/16]==2)||(matrix[m.getY()/16][m.getX()/16]==1&&matrix[m.getY()/16+1][m.getX()/16]==2)||(matrix[m.getY()/16][m.getX()/16+1]==2&&matrix[m.getY()/16+1][m.getX()/16+1]!=1)||(matrix[m.getY()/16][m.getX()/16+1]==0&&matrix[m.getY()/16+1][m.getX()/16+1]==1&&matrix[m.getY()/16+2][m.getX()/16+1]==2)||(matrix[m.getY()/16][m.getX()/16+1]==1&&matrix[m.getY()/16+1][m.getX()/16+1]==2)&&m.getX()%16!=0){
-                                        m.setScale(true);
-                                        m.setY(m.getY()+8);
-                                        m.setCont(m.getCont()+1);
-                                        if(m.getCont()==1)
-                                                bmp=al_load_bitmap("Sprites/Climbing1.png");
-                                        else{
-                                                bmp=al_load_bitmap("Sprites/Climbing2.png");
-                                                m.setCont(0);
-                                        }
-                                        al_draw_bitmap(bmp,m.getX(),m.getY(),0);
                                         al_destroy_bitmap(bmp);
-                                }
-                                else 
-                                        m.Draw(true);
-                                m.setDown(false);
-                                
+                                }                                
                         }
                         else if(m.getRight()&&m.getFall()==false/*&&!m.getScale()*/)
                         {
+                                m.setUp(false);
                                 m.setReverse(true);
                                 if(m.getX()!=(y*16)-16/*&&m.getY()%16==0*/)/*DIVERSO DA FINE SCHERMO*/{
                                         if(m.getY()%16==0 && matrix[m.getY()/16+1][m.getX()/16]==1 && m.getScale())
@@ -248,6 +259,52 @@ class Graphic{
                                 else if(m.getX()==0)
                                         m.Draw(false);
                                 m.setLeft(false);
+                        }
+                        else if((m.getUp()&&m.getFall()==false)){                        
+                                if(((matrix[m.getY()/16][m.getX()/16]==2 || matrix[m.getY()/16][m.getX()/16]==1)   || (matrix[(m.getY()+8)/16][m.getX()/16]==2 || matrix[(m.getY()+8)/16][m.getX()/16]==1))||(m.getX()%16!=0&&((matrix[m.getY()/16][m.getX()/16+1]==2 || matrix[m.getY()/16][m.getX()/16+1]==1)   || (matrix[(m.getY()+8)/16][m.getX()/16+1]==2 || matrix[(m.getY()+8)/16][m.getX()/16+1]==1)))){
+                                        m.setScale(true);
+                                        m.setY(m.getY()-8);
+                                        m.setCont(m.getCont()+1);
+                                        if(m.getCont()==1)
+                                                bmp=al_load_bitmap("Sprites/Climbing1.png");
+                                        else{
+                                                bmp=al_load_bitmap("Sprites/Climbing2.png");
+                                                m.setCont(0);
+                                        }
+                                        al_draw_bitmap(bmp,m.getX(),m.getY(),0);
+                                        al_destroy_bitmap(bmp);
+                                }
+                                else{
+                                        if(m.getReverse())
+                                                m.Draw(true);
+                                        else
+                                                m.Draw(false);
+                                }
+                                
+                                m.setUp(false);
+                        }
+                        else if(m.getDown()&&m.getFall()==false){
+                                if((matrix[m.getY()/16][m.getX()/16]==2&&matrix[m.getY()/16+1][m.getX()/16]!=1)||(matrix[m.getY()/16][m.getX()/16]==0&&matrix[m.getY()/16+1][m.getX()/16]==1&&matrix[m.getY()/16+2][m.getX()/16]==2)||(matrix[m.getY()/16][m.getX()/16]==1&&matrix[m.getY()/16+1][m.getX()/16]==2)||(matrix[m.getY()/16][m.getX()/16+1]==2&&matrix[m.getY()/16+1][m.getX()/16+1]!=1)||(m.getX()%16!=0&&matrix[m.getY()/16][m.getX()/16+1]==0&&matrix[m.getY()/16+1][m.getX()/16+1]==1&&matrix[m.getY()/16+2][m.getX()/16+1]==2)||(matrix[m.getY()/16][m.getX()/16+1]==1&&matrix[m.getY()/16+1][m.getX()/16+1]==2)&&m.getX()%16!=0){
+                                        m.setScale(true);
+                                        m.setY(m.getY()+8);
+                                        m.setCont(m.getCont()+1);
+                                        if(m.getCont()==1)
+                                                bmp=al_load_bitmap("Sprites/Climbing1.png");
+                                        else{
+                                                bmp=al_load_bitmap("Sprites/Climbing2.png");
+                                                m.setCont(0);
+                                        }
+                                        al_draw_bitmap(bmp,m.getX(),m.getY(),0);
+                                        al_destroy_bitmap(bmp);
+                                }
+                                else{
+                                        if(m.getReverse()) 
+                                                m.Draw(true);
+                                        else 
+                                                m.Draw(false);
+                                }
+                                m.setDown(false);
+                                
                         }
                         else if(m.getScale())
                         {

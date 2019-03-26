@@ -15,7 +15,7 @@ int main(int argc, char **argv)
 	bool done = false;
 	bool redraw = true;
 	int FPS = 30; //30
-	bool keys[4] = {false, false, false, false};
+	bool keys[5] = {false, false, false, false, false};
 	//cout<<x<<" "<<y;
 	ALLEGRO_EVENT_QUEUE *event_queue = NULL;
 	ALLEGRO_TIMER *timer = NULL;
@@ -82,6 +82,9 @@ int main(int argc, char **argv)
 				case ALLEGRO_KEY_LEFT:
 					keys[LEFT] = true;
 					break;
+				case ALLEGRO_KEY_SPACE:
+					keys[SPACE]=true;
+					break;
 			}
 		}
 		else if(ev.type == ALLEGRO_EVENT_KEY_UP)
@@ -100,6 +103,9 @@ int main(int argc, char **argv)
 				case ALLEGRO_KEY_LEFT:
 					keys[LEFT] = false;
 					break;
+				case ALLEGRO_KEY_SPACE:
+					keys[SPACE]=false;
+					break;	
 				case ALLEGRO_KEY_ESCAPE:
 					done = true;
 					break;
@@ -114,29 +120,18 @@ int main(int argc, char **argv)
 			{
 				if(keys[UP]){
 					mario.setUp(true);
-					mario.setDown(false);
-					mario.setLeft(false);
-					mario.setRight(false);}
+					mario.setDown(false);}
 				if(keys[DOWN]){
 					mario.setDown(true);
 					mario.setUp(false);
 					mario.setLeft(false);
 					mario.setRight(false);}
 				if(keys[LEFT]){
-					mario.setLeft(true);
-					mario.setDown(false);
-					mario.setUp(false);
-					mario.setRight(false);}
+					mario.setLeft(true);}
 				if(keys[RIGHT]){
-					mario.setRight(true);
-					mario.setLeft(false);
-					mario.setDown(false);
-					mario.setUp(false);}
-				if(mario.getFall()){
-					mario.setLeft(false);
-					mario.setDown(false);
-					mario.setUp(false);
-					mario.setRight(false);}
+					mario.setRight(true);}
+				if(keys[SPACE])
+					mario.setSpace(true);
 				redraw = true;
 			}
 		if(redraw && al_is_event_queue_empty(event_queue))

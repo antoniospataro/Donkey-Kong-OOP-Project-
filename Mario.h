@@ -14,10 +14,15 @@ class Mario: public Entity{
         bool up;
         bool scale;
         bool reverse;
+        bool space;
         bool jump;
+        int jmp;
     public:
         Mario(const int& x=0,const int& y=0):Entity(x,y),cont(0),lancia(0),scale(false),fall(false),right(false),left(false),down(false){srand((unsigned)time(NULL));}
 
+        void setJmp(int j){jmp=j;}
+        int getJmp(){return jmp;}
+        void setSpace(bool spa){space=spa;}
         void setJump(bool ok){jump=ok;}
         void setReverse(bool ok){reverse=ok;}
         void setScale(int c){scale=c;}
@@ -36,6 +41,7 @@ class Mario: public Entity{
         bool getLeft(){return left;}
         bool getUp(){return up;}
         bool getScale(){return scale;}
+        bool getSpace(){return space;}
 
         void Draw(bool ok){
             bip=al_load_bitmap("Sprites/Walk0.png");
