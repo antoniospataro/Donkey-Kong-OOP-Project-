@@ -44,12 +44,32 @@ class Graphic{
                         this->buffer = buffer;
                         this->display = display;
                 }
-                void drawMenu ()
+                void drawMenu (bool start)
                 {
                         al_set_target_bitmap(buffer);
                         bmp = al_load_bitmap("Sprites/dk.png");
-                        al_draw_bitmap(bmp,(pixel*x)/2,(pixel*y)/8,0);
+                        al_draw_bitmap(bmp,(pixel*x)/3,(pixel*y)/500,0);
                         al_destroy_bitmap(bmp);
+                        if (start)
+                        {
+                                bmp = al_load_bitmap("Sprites/Start2.png");
+                                al_draw_bitmap(bmp,(pixel*x)/2,(pixel*y)/3,0);
+                                al_destroy_bitmap(bmp);
+
+                                bmp = al_load_bitmap("Sprites/Exit1.png");
+                                al_draw_bitmap(bmp,(pixel*x)/2,(pixel*y)/2,0);
+                                al_destroy_bitmap(bmp);
+                        }
+                        if (!start)
+                        {
+                                bmp = al_load_bitmap("Sprites/Start1.png");
+                                al_draw_bitmap(bmp,(pixel*x)/2,(pixel*y)/3,0);
+                                al_destroy_bitmap(bmp);
+
+                                bmp = al_load_bitmap("Sprites/Exit2.png");
+                                al_draw_bitmap(bmp,(pixel*x)/2,(pixel*y)/2,0);
+                                al_destroy_bitmap(bmp);
+                        }
 
                         al_set_target_backbuffer(this->display);
                         al_clear_to_color(al_map_rgb(0, 0, 0));

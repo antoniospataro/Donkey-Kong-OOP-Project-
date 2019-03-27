@@ -12,6 +12,7 @@ int main(int argc, char **argv)
 {
 	int screenWidth=pixel*37; //30 w
 	int screenHeight=pixel*24; //26 h
+	bool premiStart = true;
 	bool Esci = false;
 	bool menu = true;
 	bool redraw = true;
@@ -105,9 +106,22 @@ int main(int argc, char **argv)
 
 		else if(ev.type == ALLEGRO_EVENT_TIMER)
 		{
-			if (keys[ENTER])
+			if (keys[UP])
+			{
+				premiStart = !premiStart;
+			}
+			if (keys[DOWN])
+			{
+				premiStart = !premiStart;
+			}
+			if (keys[ENTER] && premiStart)
 			{
 				menu = false;
+			}
+			if (keys[ENTER] && !premiStart)
+			{
+				menu = false;
+				Esci = true;
 			}
 			redraw = true;
 		}
@@ -125,7 +139,7 @@ int main(int argc, char **argv)
 		else if (redraw && al_is_event_queue_empty(event_queue))
 		{
 			redraw = false;
-			manager.drawMenu();
+			manager.drawMenu(premiStart);
 			al_flip_display();
 		}
 
