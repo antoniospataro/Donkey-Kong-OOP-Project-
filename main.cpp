@@ -1,4 +1,3 @@
-//desktop
 /*$(pkg-config allegro-5 allegro_font-5 allegro_image-5 allegro_memfile-5 allegro_ttf-5 allegro_physfs-5 allegro_dialog-5 allegro_video-5 allegro_acodec-5 allegro_main-5 allegro_primitives-5 allegro_audio-5 --libs --cflags) */
 #include<allegro5/allegro.h>
 #include<allegro5/allegro_image.h>
@@ -14,8 +13,8 @@ int main(int argc, char **argv)
 	int screenWidth=pixel*37; //30 w
 	int screenHeight=pixel*24; //26 h
 	bool premiStart = true;
-	bool Esci = false;
 	bool menu = true;
+	bool Esci = false;
 	bool redraw = true;
 	int FPS = 30; //30
 	bool keys[7] = {false, false, false, false, false, false, false};
@@ -24,28 +23,28 @@ int main(int argc, char **argv)
 	ALLEGRO_TIMER *timer = NULL;
 	if(!al_init())										//initialize Allegro
 		return -1;
-    	al_set_new_display_flags(ALLEGRO_FULLSCREEN_WINDOW);
+    al_set_new_display_flags(ALLEGRO_FULLSCREEN_WINDOW);
 	ALLEGRO_DISPLAY *display = al_create_display(screenWidth,screenHeight);
-   	if(!display){
+    if(!display){
         cout << "Fatal error, unable to create a display";
         return -1;
-    	}
-    	ALLEGRO_BITMAP *buffer = al_create_bitmap(screenWidth,screenHeight);
-    	if(!buffer){
+    }
+    ALLEGRO_BITMAP *buffer = al_create_bitmap(screenWidth,screenHeight);
+    if(!buffer){
         cout << "Fatal error, unable to create a buffer";
         return -1;
-    	}
+    }
 	int windowHeight = al_get_display_height(display);
-    	int windowWidth = al_get_display_width(display);
-    	float sx = windowWidth / float(screenWidth);
-    	float sy = windowHeight / float(screenHeight);
-    	int scale = std::min(sx, sy);
-    	int scaleW = screenWidth * scale;
-    	int scaleH = screenHeight * scale;
-    	int scaleX = (windowWidth - scaleW) / 2;
-    	int scaleY = (windowHeight - scaleH) / 2;
+    int windowWidth = al_get_display_width(display);
+    float sx = windowWidth / float(screenWidth);
+    float sy = windowHeight / float(screenHeight);
+    int scale = std::min(sx, sy);
+    int scaleW = screenWidth * scale;
+    int scaleH = screenHeight * scale;
+    int scaleX = (windowWidth - scaleW) / 2;
+    int scaleY = (windowHeight - scaleH) / 2;
 	al_set_target_bitmap(buffer);
- 	al_clear_to_color(al_map_rgb(0, 0, 0));
+    al_clear_to_color(al_map_rgb(0, 0, 0));
 	al_install_keyboard();
 	if(!al_init_image_addon()){cout<<"NUOH FAZIO";return -1;}
 	event_queue = al_create_event_queue();
@@ -145,7 +144,6 @@ int main(int argc, char **argv)
 		}
 
 	}
-
 
 	while(!Esci)
 	{

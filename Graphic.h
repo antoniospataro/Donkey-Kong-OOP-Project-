@@ -10,7 +10,7 @@ using namespace std;
 int x;
 int y; 
 int pixel=16;
-enum KEYS{ UP, DOWN, LEFT, RIGHT, SPACE, ENTER, ESCAPE};
+enum KEYS{ UP, DOWN, LEFT, RIGHT, SPACE, ENTER,ESCAPE};
 class Graphic{
         private: 
                 int matrix[100][100];
@@ -48,7 +48,7 @@ class Graphic{
                 {
                         al_set_target_bitmap(buffer);
                         bmp = al_load_bitmap("Sprites/dk.png");
-                        al_draw_bitmap(bmp,(pixel*x)/3,(pixel*y)/500,0);
+                        al_draw_bitmap(bmp,(pixel*x)/2,(pixel*y)/500,0);
                         al_destroy_bitmap(bmp);
                         if (start)
                         {
@@ -74,7 +74,7 @@ class Graphic{
                         al_set_target_backbuffer(this->display);
                         al_clear_to_color(al_map_rgb(0, 0, 0));
                         al_draw_scaled_bitmap(buffer, 0, 0,(y*pixel) ,(x*pixel), scale_x, scale_y, scale_w, scale_h, 0);
-                }                
+                }
                 void setDk(DonkeyKong& dk){
                         for (int i=0;i<x;i++)
                                 for (int j=0;j<y;j++)
@@ -140,8 +140,8 @@ class Graphic{
                                                 m.setX(m.getX()+8); }                                              
                                         al_draw_bitmap(bmp,m.getX(),m.getY(),ALLEGRO_FLIP_HORIZONTAL);
                                 }
-                                else if(m.getLeft()&&m.getX()!=0){
-                                        if(m.getJmp()!=2){/*togliere se si vuole lasciare in aria un solo frame*/
+                                else if(m.getLeft()){
+                                        if(m.getJmp()!=2&&m.getX()!=0){/*togliere se si vuole lasciare in aria un solo frame*/
                                                 m.setY(m.getY()-8);
                                                 m.setX(m.getX()-8);}
                                         al_draw_bitmap(bmp,m.getX(),m.getY(),0);
