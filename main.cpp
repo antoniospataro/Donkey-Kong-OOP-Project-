@@ -108,11 +108,11 @@ int main(int argc, char **argv)
 		{
 			if (keys[UP])
 			{
-				premiStart = !premiStart;
+				premiStart =  true;
 			}
 			if (keys[DOWN])
 			{
-				premiStart = !premiStart;
+				premiStart = false;
 			}
 			if (keys[ENTER] && premiStart)
 			{
