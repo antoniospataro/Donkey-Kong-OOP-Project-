@@ -221,7 +221,6 @@ class Graphic{
                         }
                         else if(m.getRight()&&m.getFall()==false/*&&!m.getScale()*/)
                         {
-                                m.setUp(false);
                                 m.setReverse(true);
                                 if(m.getX()!=(y*16)-16/*&&m.getY()%16==0*/)/*DIVERSO DA FINE SCHERMO*/{
                                         if(m.getY()%16==0 && matrix[m.getY()/16+1][m.getX()/16]==1 && m.getScale())

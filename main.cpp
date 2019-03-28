@@ -210,9 +210,15 @@ int main(int argc, char **argv)
 					mario.setLeft(false);
 					mario.setRight(false);}
 				if(keys[LEFT]){
-					mario.setLeft(true);}
+					mario.setLeft(true);
+					mario.setRight(false);
+					mario.setUp(false);
+					mario.setDown(false);}
 				if(keys[RIGHT]){
-					mario.setRight(true);}
+					mario.setRight(true);
+					mario.setLeft(false);
+					mario.setUp(false);
+					mario.setDown(false);}
 				if(keys[SPACE])
 					mario.setSpace(true);
 				redraw = true;
