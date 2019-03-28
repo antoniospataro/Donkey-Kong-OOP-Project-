@@ -209,12 +209,12 @@ int main(int argc, char **argv)
 					mario.setUp(false);
 					mario.setLeft(false);
 					mario.setRight(false);}
-				if(keys[LEFT]){
+				if(keys[LEFT]&&!keys[RIGHT]){
 					mario.setLeft(true);
 					mario.setRight(false);
 					mario.setUp(false);
 					mario.setDown(false);}
-				if(keys[RIGHT]){
+				if(keys[RIGHT]&&!keys[LEFT]){
 					mario.setRight(true);
 					mario.setLeft(false);
 					mario.setUp(false);
