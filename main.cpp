@@ -16,7 +16,7 @@ int main(int argc, char **argv)
 	bool menu = true;
 	bool Esci = false;
 	bool redraw = true;
-	int FPS = 120; //40
+	int FPS = 40; //40
 	bool keys[7] = {false, false, false, false, false, false, false};
 	//cout<<x<<" "<<y;
 	ALLEGRO_EVENT_QUEUE *event_queue = NULL;
