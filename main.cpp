@@ -3,11 +3,11 @@
 #include<allegro5/allegro_image.h>
 #include "Graphic.h"
 #include<algorithm>
-#include "Mario.h"
-extern int barx, bary; 
+#include "Mario.h" 
 using namespace std;
 //enum KEYS{ UP, DOWN, LEFT, RIGHT};
-//x=112 y=88
+extern int x;
+extern int y;
 int main(int argc, char **argv)
 {
 	int screenWidth=pixel*37; //30 w
@@ -16,7 +16,7 @@ int main(int argc, char **argv)
 	bool menu = true;
 	bool Esci = false;
 	bool redraw = true;
-	int FPS = 30; //30
+	int FPS = 120; //40
 	bool keys[7] = {false, false, false, false, false, false, false};
 	//cout<<x<<" "<<y;
 	ALLEGRO_EVENT_QUEUE *event_queue = NULL;
@@ -49,13 +49,11 @@ int main(int argc, char **argv)
 	if(!al_init_image_addon()){cout<<"NUOH FAZIO";return -1;}
 	event_queue = al_create_event_queue();
 	timer = al_create_timer(3.0/FPS);
-	int matrix[x][y];
-	
 	DonkeyKong dk(0,0);
 	Barrel barrel(0,0);
 	Mario mario(/*(rand()%28)*8*/3*pixel,19*pixel);
 	//cout<<matrix[23][14]; PRIMA SCALA
-	Graphic manager(1,scaleW, scaleH, scaleX, scaleY, buffer, display);
+	Graphic manager(scaleW, scaleH, scaleX, scaleY, buffer, display);
 	manager.setDk(dk);
 	int pos_x=0;
 	int pos_y=0;
@@ -228,7 +226,8 @@ int main(int argc, char **argv)
 			redraw = false;
 			manager.drawMap();
 			manager.drawDK(dk);
-			manager.drawMario(mario);
+			manager.drawMario(mario,dk);
+			manager.drawBarrels(mario);
 			//al_draw_porcofazioh;
             al_flip_display();
 		}

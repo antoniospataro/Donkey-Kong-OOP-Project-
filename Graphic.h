@@ -4,11 +4,12 @@
 #include "Mario.h"
 #include <fstream>
 #include <iostream>
+#include <vector>
 using namespace std;
 #ifndef GRAPHIC_H
 #define GRAPHIC_H
-int x;
-int y; 
+int x=0;
+int y=0;
 int pixel=16;
 enum KEYS{ UP, DOWN, LEFT, RIGHT, SPACE, ENTER,ESCAPE};
 class Graphic{
@@ -23,15 +24,15 @@ class Graphic{
                 int scale_h;
                 int scale_x;
                 int scale_y; 
+                int level;
+                vector<Barrel> barrels;
         public:
-                Graphic(int level, const int &scale_w, const int &scale_h, const int &scale_x, const int &scale_y, ALLEGRO_BITMAP *buffer, ALLEGRO_DISPLAY *display){
+                Graphic(const int &scale_w, const int &scale_h, const int &scale_x, const int &scale_y, ALLEGRO_BITMAP *buffer, ALLEGRO_DISPLAY *display){
+                        this->level=1;
                         fstream input;
-                        if(level==1)
-                                input.open("Map1.map");
-                        if(level==2)
-                                input.open("Map2.map");
+                        input.open("Map1.map");
                         if (input.is_open())
-                                input>> x >> y;
+                                input>> ::x >> ::y;
                         if (input.is_open())
                                 for (int i=0;i<x;i++)
                                         for (int j=0;j<y;j++)
@@ -107,7 +108,18 @@ class Graphic{
                                                 case 3:
                                                         bmp=al_load_bitmap("Sprites/Barrel0.png");
                                                         al_draw_bitmap(bmp,j*pixel,i*pixel,0);
-                                                        al_destroy_bitmap(bmp);        
+                                                        al_destroy_bitmap(bmp);
+                                                        break;
+                                                case 4:
+                                                        bmp=al_load_bitmap("Sprites/Floor2.png");
+                                                        al_draw_bitmap(bmp,j*pixel,i*pixel,0);
+                                                        al_destroy_bitmap(bmp);
+                                                        break;                                                       
+                                                case 5: 
+                                                        bmp=al_load_bitmap("Sprites/Scale2.png");
+                                                        al_draw_bitmap(bmp,j*pixel,i*pixel,0);
+                                                        al_destroy_bitmap(bmp);
+                                                        break;
                                                 default:
                                                         break;
                                         }                
@@ -120,13 +132,49 @@ class Graphic{
                 void drawDK(DonkeyKong& dk){
                         al_set_target_bitmap(buffer);
                         dk.Draw();
+                        if(dk.getCont()==22){
+                                barrels.push_back(Barrel(dk.getX()+48,dk.getY()+32));cout<<"sksk";}       
                         al_set_target_backbuffer(this->display);
                         al_clear_to_color(al_map_rgb(0, 0, 0));
                         al_draw_scaled_bitmap(buffer, 0, 0,(y*pixel) ,(x*pixel), scale_x, scale_y, scale_w, scale_h, 0);
 
                 }
-                void drawMario(Mario& m){
+                void drawBarrels(Mario& m){
+                        if(barrels.empty())
+                                return;
                         al_set_target_bitmap(buffer);
+                        for(int i=0;i<barrels.size();i++)
+                        {
+                                if(barrels[i].getX()==0){
+                                        barrels[i].setLeft(false);
+                                        barrels[i].setRight(true);
+                                }
+                                else if(barrels[i].getX()/16==(y-1)){
+                                        barrels[i].setLeft(true);
+                                        barrels[i].setRight(false);
+                                }
+                                if(barrels[i].getDown()&&barrels[i].getY()%16==0&&matrix[barrels[i].getY()/16+1][barrels[i].getX()/16]==1)
+                                        barrels[i].setDown(false);
+                                if(!barrels[i].getDown()&&barrels[i].getX()%16==0&&matrix[barrels[i].getY()/16+2][barrels[i].getX()/16]==2)
+                                        barrels[i].setDown(rand()%2);
+                                barrels[i].Draw();
+                                if(barrels[i].getX()%16==0&&matrix[barrels[i].getY()/16+1][barrels[i].getX()/16]==0)
+                                        barrels[i].setFall(true);
+                                if(barrels[i].getY()%16==0&&matrix[barrels[i].getY()/16+1][barrels[i].getX()/16]==1)
+                                        barrels[i].setFall(false);
+                                if((barrels[i].getY()==m.getY())&&(barrels[i].getX()==m.getX()||barrels[i].getX()==m.getX()+8||barrels[i].getX()==m.getX()-8)){
+                                         m.setX(3*pixel);                                   
+                                        m.setY(19*pixel);
+                                        barrels.clear(); 
+                                }
+
+                        }
+                        al_set_target_backbuffer(this->display);
+                        al_clear_to_color(al_map_rgb(0, 0, 0));
+                        al_draw_scaled_bitmap(buffer, 0, 0,(y*pixel) ,(x*pixel), scale_x, scale_y, scale_w, scale_h, 0);
+                }
+                void drawMario(Mario& m,DonkeyKong& dk){
+                        al_set_target_bitmap(buffer);       
                         if(m.getJump())
                         {
                                 if(m.getSpace())
@@ -135,27 +183,27 @@ class Graphic{
                                 bmp=al_load_bitmap("Sprites/Walk2.png");
                                 if(m.getRight())
                                 {
-                                        if(m.getJmp()!=2&&m.getX()!=y*pixel-16){
+                                        if(m.getJmp()!=3&&m.getX()!=y*pixel-16){
                                                 m.setY(m.getY()-8);
                                                 m.setX(m.getX()+8); }                                              
                                         al_draw_bitmap(bmp,m.getX(),m.getY(),ALLEGRO_FLIP_HORIZONTAL);
                                 }
                                 else if(m.getLeft()){
-                                        if(m.getJmp()!=2&&m.getX()!=0){/*togliere se si vuole lasciare in aria un solo frame*/
+                                        if(m.getJmp()!=3&&m.getX()!=0){/*togliere se si vuole lasciare in aria un solo frame*/
                                                 m.setY(m.getY()-8);
                                                 m.setX(m.getX()-8);}
                                         al_draw_bitmap(bmp,m.getX(),m.getY(),0);
 
                                 }
                                 else{
-                                        if(m.getJmp()!=2) /*togliere se si vuole lasciare in aria un solo frame*/
+                                        if(m.getJmp()!=3) /*togliere se si vuole lasciare in aria un solo frame*/
                                                 m.setY(m.getY()-8);
                                         if(m.getReverse())
                                                 al_draw_bitmap(bmp,m.getX(),m.getY(),ALLEGRO_FLIP_HORIZONTAL);
                                         else
                                                 al_draw_bitmap(bmp,m.getX(),m.getY(),0);
                                 }
-                                if(m.getJmp()==2){ /*togliere se si vuole lasciare in aria un solo frame*/
+                                if(m.getJmp()==3){ /*togliere se si vuole lasciare in aria un solo frame*/
                                         m.setJump(false);}
                                 m.setFall(true);
                                 al_destroy_bitmap(bmp);
@@ -166,14 +214,14 @@ class Graphic{
                                 if(m.getSpace())
                                         m.setSpace(false);
                                 m.setY(m.getY()+8);
-                                if(m.getRight()&&m.getX()!=(y*16)-16&&(m.getJmp()==3||m.getJmp()==4)){
+                                if(m.getRight()&&m.getX()!=(y*16)-16&&(m.getJmp()==4||m.getJmp()==5||m.getJmp()==6)){
                                         m.setX(m.getX()+8);
                                         m.setRight(false);}
-                                else if(m.getLeft()&&m.getX()!=0&&(m.getJmp()==3||m.getJmp()==4)){
+                                else if(m.getLeft()&&m.getX()!=0&&(m.getJmp()==4||m.getJmp()==5||m.getJmp()==6)){
                                         m.setX(m.getX()-8);
                                         m.setLeft(false);}
                                 m.Draw(true);
-                                if(m.getY()%16==0&&matrix[m.getY()/16+1][m.getX()/16]==1){
+                                if(m.getY()%16==0&&matrix[m.getY()/16+1][m.getX()/16]==1||(m.getX()%16!=0&&matrix[m.getY()/16+1][m.getX()/16+1]==1)){
                                       m.setFall(false);m.setJmp(0);}
                         }
                         else if(m.getFall()&&m.getReverse()==false){
@@ -181,14 +229,17 @@ class Graphic{
                                 if(m.getSpace())
                                         m.setSpace(false);
                                 m.setY(m.getY()+8);
-                                if(m.getRight()&&m.getX()!=(y*16)-16&&(m.getJmp()==3||m.getJmp()==4)){
+                                if(m.getRight()&&m.getX()!=(y*16)-16/*&&matrix[m.getY()/16][m.getX()/16+1]!=1&&(m.getY()%16!=0&&matrix[m.getY()/16-1][m.getX()/16+1]!=1)*/&&(m.getJmp()==4||m.getJmp()==5||m.getJmp()==6)){
                                         m.setX(m.getX()+8);
                                         m.setRight(false);}
-                                else if(m.getLeft()&&m.getX()!=0&&(m.getJmp()==3||m.getJmp()==4)){
+                                /*else if((m.getY()%16!=0&&matrix[m.getY()/16-1][m.getX()/16+1]==1)||matrix[m.getY()/16][m.getX()/16+1]==1)
+                                        m.setRight(false);*/ //TUTTO QUELLO COMMMENTATO SERVE PER NON COLLIDERE CON FLOOR MENTRE CADI, NON TOGLIERE(PER ORA)
+                                else if(m.getLeft()&&m.getX()!=0&&(m.getJmp()==4||m.getJmp()==5||m.getJmp()==6)){
                                         m.setX(m.getX()-8);
                                         m.setLeft(false);}
                                 m.Draw(false);
-                                if(m.getY()%16==0&&matrix[m.getY()/16+1][m.getX()/16]==1){
+
+                                if(/*m.getY()%16==0&&*/matrix[m.getY()/16+1][m.getX()/16]==1||(m.getX()%16!=0&&matrix[m.getY()/16+1][m.getX()/16+1]==1)){
                                       m.setFall(false);m.setJmp(0);}
                         }
                         else if(m.getSpace()){
@@ -354,6 +405,40 @@ class Graphic{
                                 m.Draw(true);
                         else
                                 m.Draw(false);
+                        if(matrix[m.getY()/16][m.getX()/16]==2&&m.getY()==0){
+                                if(level==1){
+                                        level=2;
+                                        fstream input;
+                                        input.open("Map2.map");
+                                        if (input.is_open())
+                                                input>> x >> y;
+                                        if (input.is_open())
+                                                for (int i=0;i<x;i++)
+                                                        for (int j=0;j<y;j++)
+                                                                input >> matrix[i][j];
+	                                input.close();  
+                                        setDk(dk);
+                                        m.setX(3*pixel);                                   
+                                        m.setY(19*pixel); 
+                                        barrels.clear();                                 
+                                }
+                                else{
+                                        level=3;
+                                        fstream input;
+                                        input.open("Map3.map");
+                                        if (input.is_open())
+                                                input>> x >> y;
+                                        if (input.is_open())
+                                                for (int i=0;i<x;i++)
+                                                        for (int j=0;j<y;j++)
+                                                                input >> matrix[i][j];
+	                                input.close();
+                                        setDk(dk);
+                                        m.setX(3*pixel);                                   
+                                        m.setY(19*pixel);
+                                        barrels.clear(); 
+                                        }
+                        }
                         al_set_target_backbuffer(this->display);
                         al_clear_to_color(al_map_rgb(0, 0, 0));
                         al_draw_scaled_bitmap(buffer, 0, 0,(y*pixel) ,(x*pixel), scale_x, scale_y, scale_w, scale_h, 0);
