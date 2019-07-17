@@ -1,5 +1,6 @@
 #include"Entity.h"
 #include<ctime>
+#include<iostream>
 #ifndef MARIO_H
 #define MARIO_H
 class Mario: public Entity{
@@ -16,10 +17,16 @@ class Mario: public Entity{
         bool reverse;
         bool space;
         bool jump;
+        bool hammer;
         int jmp;
+        int contatoreHammer;
+        int life;
     public:
-        Mario(const int& x=0,const int& y=0):Entity(x,y),cont(0),lancia(0),scale(false),fall(false),right(false),left(false),down(false){srand((unsigned)time(NULL));}
+        Mario(int x,int y):Entity(x,y),life(4),cont(0),lancia(0),scale(false),fall(false),right(false),left(false),down(false),hammer(false){
+        srand((unsigned)time(NULL));}
 
+        void setLife(int j){life=j;}
+        int getLife(){return life;}
         void setJmp(int j){jmp=j;}
         int getJmp(){return jmp;}
         void setSpace(bool spa){space=spa;}
@@ -32,6 +39,8 @@ class Mario: public Entity{
         void setLeft(bool ok){left=ok;}
         void setDown(bool ok){down=ok;}
         void setUp(bool ok){up=ok;}
+        void setHammer(bool ok){hammer=ok;}
+        void setcontatoreHammer (int cont) {contatoreHammer = cont;}
         bool getJump(){return jump;}
         bool getReverse(){return reverse;}
         int getCont(){return cont;}
@@ -42,15 +51,45 @@ class Mario: public Entity{
         bool getUp(){return up;}
         bool getScale(){return scale;}
         bool getSpace(){return space;}
+        bool getHammer() {return hammer;}
+        int getcontatoreHammer() {return contatoreHammer;}
+
+
 
         void Draw(bool ok){
+
+            if (!hammer){
             bip=al_load_bitmap("Sprites/Walk0.png");
             if(ok)
                 al_draw_bitmap(bip,getX(),getY(),ALLEGRO_FLIP_HORIZONTAL);
-            else
+            else {
                 al_draw_bitmap(bip,getX(),getY(),0);
-            al_destroy_bitmap(bip);
+                al_destroy_bitmap(bip);
             }
-              
-};
+        }
+        else{
+            if (cont == 0){
+                cont = 1;
+                bip = al_load_bitmap("Sprites/Hammer1.png");
+                if(ok)
+                    al_draw_bitmap(bip,getX(),getY()-8,ALLEGRO_FLIP_HORIZONTAL);
+                else 
+                    al_draw_bitmap(bip,getX()+16,getY()-8,0);
+                al_destroy_bitmap(bip);
+            }
+            else {
+                cont = 0;
+                bip = al_load_bitmap("Sprites/Hammer2.png");
+                if(ok)
+                    al_draw_bitmap(bip,getX(),getY(),ALLEGRO_FLIP_HORIZONTAL); // destra
+                else 
+                    al_draw_bitmap(bip,getX(),getY(),0); // sinistra
+                al_destroy_bitmap(bip);
+        }
+
+        }
+    }
+}
+;
+
 #endif 

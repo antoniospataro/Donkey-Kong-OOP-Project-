@@ -1,3 +1,6 @@
+#ifndef GRAPHIC_H
+#define GRAPHIC_H
+
 #include <string>
 #include "DonkeyKong.h"
 #include "Barrel.h"
@@ -5,9 +8,12 @@
 #include <fstream>
 #include <iostream>
 #include <vector>
+#include <allegro5/allegro_ttf.h>
+#include <allegro5/allegro_font.h>
+#include <stdio.h>
+
 using namespace std;
-#ifndef GRAPHIC_H
-#define GRAPHIC_H
+
 int x=0;
 int y=0;
 int pixel=16;
@@ -18,6 +24,7 @@ class Graphic{
                 ALLEGRO_BITMAP* bmp;
                 ALLEGRO_BITMAP* buffer;
                 ALLEGRO_DISPLAY *display;
+                ALLEGRO_FONT* font;
                 int s_y;
                 int s_x;
                 int scale_w;
@@ -25,9 +32,11 @@ class Graphic{
                 int scale_x;
                 int scale_y; 
                 int level;
+                bool win;
+                bool death;
                 vector<Barrel> barrels;
         public:
-                Graphic(const int &scale_w, const int &scale_h, const int &scale_x, const int &scale_y, ALLEGRO_BITMAP *buffer, ALLEGRO_DISPLAY *display){
+                Graphic (int scaleW,int scaleH,int scaleX,int scaleY,ALLEGRO_BITMAP *buffer,ALLEGRO_DISPLAY *display){
                         this->level=1;
                         fstream input;
                         input.open("Map1.map");
@@ -38,12 +47,16 @@ class Graphic{
                                         for (int j=0;j<y;j++)
                                                 input >> matrix[i][j];
 	                input.close();
-                        this->scale_h = scale_h;
-                        this->scale_w = scale_w;
-                        this->scale_x = scale_x;
-                        this->scale_y = scale_y;
+                        win = false;
+                        death = false;
+                        font = al_load_ttf_font("Font/myFont.ttf",36,0);
+                        this->scale_h = scaleH;
+                        this->scale_w = scaleW;
+                        this->scale_x = scaleX;
+                        this->scale_y = scaleY;
                         this->buffer = buffer;
                         this->display = display;
+                        
                 }
                 void drawMenu (bool start)
                 {
@@ -79,16 +92,38 @@ class Graphic{
                 void setDk(DonkeyKong& dk){
                         for (int i=0;i<x;i++)
                                 for (int j=0;j<y;j++)
-                                if(matrix[i][j]==3&&matrix[i][j+1]==3){
-                                        dk.setX((j+2)*pixel);
-	                                dk.setY((i-2)*pixel);
-                                }
+                                        if(matrix[i][j]==3&&matrix[i][j+1]==3){
+                                                dk.setX((j+2)*pixel);
+	                                        dk.setY((i-1)*pixel);
+                                                i = x;
+                                                j = y;
+                                        }
+                }
+                void setMario(Mario& m){
+                        m.setFall(false);
+                        m.setJump(false);
+                        m.setSpace(false);
+                        m.setJmp(0);
+                        for(int i=0;i<x;i++)
+                                for(int j=0;j<y;j++)
+                                        if(matrix[i][j]==3){
+                                                if(j!=j-1)
+                                                        if(matrix[i][j+1]==0){
+                                                                m.setX((j+1)*pixel);
+	                                                        m.setY((i)*pixel);
+                                                        }
+                                                else
+                                                        if(matrix[i][j-1]==0){
+                                                                m.setX((j-1)*pixel);
+	                                                        m.setY((i)*pixel);
+                                                        }
+                                                
+                                        }
                 }
                 void drawMap ()
                 {
                         al_set_target_bitmap(buffer);
                         al_clear_to_color(al_map_rgb(0, 0, 0));
-                        ALLEGRO_BITMAP *bitmap = NULL;
                         
                         for (int i=0;i<x;i++)
                                 for (int j=0;j<y;j++)
@@ -111,15 +146,10 @@ class Graphic{
                                                         al_destroy_bitmap(bmp);
                                                         break;
                                                 case 4:
-                                                        bmp=al_load_bitmap("Sprites/Floor2.png");
+                                                        bmp=al_load_bitmap("Sprites/Hammer.png");
                                                         al_draw_bitmap(bmp,j*pixel,i*pixel,0);
                                                         al_destroy_bitmap(bmp);
                                                         break;                                                       
-                                                case 5: 
-                                                        bmp=al_load_bitmap("Sprites/Scale2.png");
-                                                        al_draw_bitmap(bmp,j*pixel,i*pixel,0);
-                                                        al_destroy_bitmap(bmp);
-                                                        break;
                                                 default:
                                                         break;
                                         }                
@@ -133,7 +163,7 @@ class Graphic{
                         al_set_target_bitmap(buffer);
                         dk.Draw();
                         if(dk.getCont()==22){
-                                barrels.push_back(Barrel(dk.getX()+48,dk.getY()+32));cout<<"sksk";}       
+                                barrels.push_back(Barrel(dk.getX()+48,dk.getY()+32));}       
                         al_set_target_backbuffer(this->display);
                         al_clear_to_color(al_map_rgb(0, 0, 0));
                         al_draw_scaled_bitmap(buffer, 0, 0,(y*pixel) ,(x*pixel), scale_x, scale_y, scale_w, scale_h, 0);
@@ -162,20 +192,92 @@ class Graphic{
                                         barrels[i].setFall(true);
                                 if(barrels[i].getY()%16==0&&matrix[barrels[i].getY()/16+1][barrels[i].getX()/16]==1)
                                         barrels[i].setFall(false);
-                                if((barrels[i].getY()==m.getY())&&(barrels[i].getX()==m.getX()||barrels[i].getX()==m.getX()+8||barrels[i].getX()==m.getX()-8)){
-                                         m.setX(3*pixel);                                   
-                                        m.setY(19*pixel);
-                                        barrels.clear(); 
+                                if((barrels[i].getX()==m.getX() || barrels[i].getX()==m.getX()+8 || barrels[i].getX()==m.getX()-8) && (barrels[i].getY()==m.getY()+8 || barrels[i].getY()==m.getY()-8 || barrels[i].getY()==m.getY()) && !m.getHammer()){
+                                        m.setLife(m.getLife()-1);
+                                        if(m.getLife()==0){
+                                                level=1;
+                                                m.setLife(4);
+                                        }
+                                        setThisMap(m);
+                                        barrels.clear();
+                                        death = true;
                                 }
-
+                                else if (barrels[i].getX()==m.getX()+16 && barrels[i].getY() == m.getY() && m.getHammer() && !m.getReverse()){
+                                        m.setLife(m.getLife()-1);
+                                        if(m.getLife()==0){
+                                                level=1;
+                                                m.setLife(4);
+                                        }
+                                        setThisMap(m);
+                                        death = true;
+                                        barrels.clear();
+                                        m.setHammer(false);
+                                }
+                                else if (barrels[i].getX()==m.getX()-16 && barrels[i].getY() == m.getY() && m.getHammer() && m.getReverse()){
+                                        m.setLife(m.getLife()-1);
+                                        if(m.getLife()==0){
+                                                level=1;
+                                                m.setLife(4);
+                                        }
+                                        setThisMap(m);
+                                        death = true;
+                                        barrels.clear();
+                                        m.setHammer(false);
+                                }
+                                else if ((barrels[i].getY()==m.getY())&&(barrels[i].getX()==m.getX() || (barrels[i].getX()<=m.getX()+16 && barrels[i].getX()>=m.getX()-16)) && m.getHammer() && !m.getReverse()){
+                                        Barrel temp(0,0);
+                                        temp = barrels[i];
+                                        barrels[i] = barrels[barrels.size()-1];
+                                        barrels[barrels.size()-1] = temp;
+                                        barrels.pop_back();
+                                }
+                                else if ((barrels[i].getY()==m.getY())&&(barrels[i].getX()==m.getX()|| (barrels[i].getX()<=m.getX()+16 && barrels[i].getX()>=m.getX()-16)) && m.getHammer() && m.getReverse()){
+                                        Barrel temp(0,0);
+                                        temp = barrels[i];
+                                        barrels[i] = barrels[barrels.size()-1];
+                                        barrels[barrels.size()-1] = temp;
+                                        barrels.pop_back();
+                                }
+                                else if (matrix[barrels[i].getY()/16][barrels[i].getX()/16] == 3){
+                                        Barrel temp(0,0);
+                                        temp = barrels[i];
+                                        barrels[i] = barrels[barrels.size()-1];
+                                        barrels[barrels.size()-1] = temp;
+                                        barrels.pop_back();
+                                }
                         }
                         al_set_target_backbuffer(this->display);
                         al_clear_to_color(al_map_rgb(0, 0, 0));
                         al_draw_scaled_bitmap(buffer, 0, 0,(y*pixel) ,(x*pixel), scale_x, scale_y, scale_w, scale_h, 0);
                 }
                 void drawMario(Mario& m,DonkeyKong& dk){
-                        al_set_target_bitmap(buffer);       
-                        if(m.getJump())
+                        al_set_target_bitmap(buffer);
+                        if (matrix[m.getY()/16][m.getX()/16] == 4 || (matrix[m.getY()/16][m.getX()/16-1] == 4 && m.getX()%16 != 0) || (matrix[m.getY()/16][m.getX()/16+1] == 4 && m.getX()%16 != 0)){ 
+                                m.setHammer(true);
+                                m.setFall(true);
+                                if (matrix[m.getY()/16][m.getX()/16] == 4)
+                                        matrix[m.getY()/16][m.getX()/16] = 0;
+                                else if (matrix[m.getY()/16][m.getX()/16+1] == 4)
+                                        matrix[m.getY()/16][m.getX()/16+1] = 0;
+                                else if (matrix[m.getY()/16][m.getX()/16-1] == 4)
+                                        matrix[m.getY()/16][m.getX()/16-1] = 0;
+                        }
+                        if (m.getHammer()){
+                                m.setcontatoreHammer(m.getcontatoreHammer()+1);
+                        }
+                        else{
+                                m.setcontatoreHammer(0);
+                        }
+                        if (m.getcontatoreHammer() == 150){
+                                m.setHammer(false);
+                        }
+
+                        if(((matrix[m.getY()/16][m.getX()/16+1]==0&&matrix[m.getY()/16+1][m.getX()/16+1]==2)||(matrix[m.getY()/16][m.getX()/16]==0&&matrix[m.getY()/16+1][m.getX()/16]==2))&&m.getScale())
+                        {
+                                m.setScale(false);
+                                m.setFall(true);
+                                m.setUp(false);}
+                        if(m.getJump() && !m.getHammer())
                         {
                                 if(m.getSpace())
                                         m.setSpace(false);
@@ -183,33 +285,35 @@ class Graphic{
                                 bmp=al_load_bitmap("Sprites/Walk2.png");
                                 if(m.getRight())
                                 {
-                                        if(m.getJmp()!=3&&m.getX()!=y*pixel-16){
+                                        if(m.getJmp()<3&&m.getX()!=y*pixel-16){
                                                 m.setY(m.getY()-8);
                                                 m.setX(m.getX()+8); }                                              
                                         al_draw_bitmap(bmp,m.getX(),m.getY(),ALLEGRO_FLIP_HORIZONTAL);
                                 }
                                 else if(m.getLeft()){
-                                        if(m.getJmp()!=3&&m.getX()!=0){/*togliere se si vuole lasciare in aria un solo frame*/
+                                        if(m.getJmp()<3&&m.getX()!=0){/*togliere se si vuole lasciare in aria un solo frame*/
                                                 m.setY(m.getY()-8);
                                                 m.setX(m.getX()-8);}
                                         al_draw_bitmap(bmp,m.getX(),m.getY(),0);
 
                                 }
                                 else{
-                                        if(m.getJmp()!=3) /*togliere se si vuole lasciare in aria un solo frame*/
+                                        if(m.getJmp()<3) /*togliere se si vuole lasciare in aria un solo frame*/
                                                 m.setY(m.getY()-8);
                                         if(m.getReverse())
                                                 al_draw_bitmap(bmp,m.getX(),m.getY(),ALLEGRO_FLIP_HORIZONTAL);
                                         else
                                                 al_draw_bitmap(bmp,m.getX(),m.getY(),0);
                                 }
-                                if(m.getJmp()==3){ /*togliere se si vuole lasciare in aria un solo frame*/
+                                if(m.getJmp()>=3){ /*togliere se si vuole lasciare in aria un solo frame*/
                                         m.setJump(false);}
                                 m.setFall(true);
                                 al_destroy_bitmap(bmp);
                         }
                         else if(m.getFall()&&m.getReverse())
-                        {
+                        {       
+                                m.setUp(false);
+                                m.setDown(false);
                                 m.setJmp(m.getJmp()+1);
                                 if(m.getSpace())
                                         m.setSpace(false);
@@ -229,25 +333,22 @@ class Graphic{
                                 if(m.getSpace())
                                         m.setSpace(false);
                                 m.setY(m.getY()+8);
-                                if(m.getRight()&&m.getX()!=(y*16)-16/*&&matrix[m.getY()/16][m.getX()/16+1]!=1&&(m.getY()%16!=0&&matrix[m.getY()/16-1][m.getX()/16+1]!=1)*/&&(m.getJmp()==4||m.getJmp()==5||m.getJmp()==6)){
+                                if(m.getRight()&&m.getX()!=(y*16)-16&&(m.getJmp()==4||m.getJmp()==5||m.getJmp()==6)){
                                         m.setX(m.getX()+8);
                                         m.setRight(false);}
-                                /*else if((m.getY()%16!=0&&matrix[m.getY()/16-1][m.getX()/16+1]==1)||matrix[m.getY()/16][m.getX()/16+1]==1)
-                                        m.setRight(false);*/ //TUTTO QUELLO COMMMENTATO SERVE PER NON COLLIDERE CON FLOOR MENTRE CADI, NON TOGLIERE(PER ORA)
                                 else if(m.getLeft()&&m.getX()!=0&&(m.getJmp()==4||m.getJmp()==5||m.getJmp()==6)){
                                         m.setX(m.getX()-8);
                                         m.setLeft(false);}
                                 m.Draw(false);
 
-                                if(/*m.getY()%16==0&&*/matrix[m.getY()/16+1][m.getX()/16]==1||(m.getX()%16!=0&&matrix[m.getY()/16+1][m.getX()/16+1]==1)){
-                                      m.setFall(false);m.setJmp(0);}
+                                if(matrix[m.getY()/16+1][m.getX()/16]==1||(m.getX()%16!=0&&matrix[m.getY()/16+1][m.getX()/16+1]==1)){
+                                      m.setScale(false);m.setFall(false);m.setJmp(0);}
                         }
-                        else if(m.getSpace()){
+                        else if(m.getSpace() && !m.getHammer()){
                                 m.setSpace(false);
                                 if(m.getFall()==false&&m.getJump()==false){
                                         m.setJump(true);
-                                        // cout<<m.getX()/16<<" "<<m.getY()/16;
-                                        if(m.getReverse()){
+                                          if(m.getReverse()){
                                                 if(m.getRight()&&m.getX()!=(y*16)-16){
                                                         m.setY(m.getY()-8);
                                                         m.setX(m.getX()+8);
@@ -276,7 +377,7 @@ class Graphic{
                                 if(m.getX()!=(y*16)-16/*&&m.getY()%16==0*/)/*DIVERSO DA FINE SCHERMO*/{
                                         if(m.getY()%16==0 && matrix[m.getY()/16+1][m.getX()/16]==1 && m.getScale())
                                                 m.setScale(false);
-                                        if(!m.getScale()){
+                                        if(!m.getScale() && !m.getHammer()){
                                                 m.setX(m.getX()+8);
                                                 m.setCont(m.getCont()+1);
                                                 if(m.getCont()==1)
@@ -284,7 +385,7 @@ class Graphic{
                                                 else{
                                                         bmp=al_load_bitmap("Sprites/Walk2.png");m.setCont(0);}                                                
                                         }
-                                        else{
+                                        else if(m.getScale() && !m.getHammer()){
                                              m.setX(m.getX()+8);
                                                 m.setCont(m.getCont()+1);
                                                 if(m.getCont()==1)
@@ -292,7 +393,28 @@ class Graphic{
                                                 else{
                                                         bmp=al_load_bitmap("Sprites/Climbing2.png");m.setCont(0);}   
                                         }
-                                        al_draw_bitmap(bmp,m.getX(),m.getY(),ALLEGRO_FLIP_HORIZONTAL);
+                                        else{
+                                                m.setX(m.getX()+8);
+                                                m.setCont(m.getCont()+1);
+                                                if(m.getCont()==1)
+                                                        bmp=al_load_bitmap("Sprites/Hammer3.png");
+                                                else{
+                                                        bmp=al_load_bitmap("Sprites/Hammer4.png");
+                                                        m.setCont(0);
+                                                } 
+                                        }
+                                        if (m.getCont() != 0){
+                                                if (!m.getHammer())
+                                                        al_draw_bitmap(bmp,m.getX(),m.getY(),ALLEGRO_FLIP_HORIZONTAL);
+                                                else
+                                                        al_draw_bitmap(bmp,m.getX(),m.getY()-8,ALLEGRO_FLIP_HORIZONTAL);
+                                        }
+                                        else {
+                                                if (!m.getHammer())
+                                                        al_draw_bitmap(bmp,m.getX(),m.getY(),ALLEGRO_FLIP_HORIZONTAL);
+                                                else
+                                                        al_draw_bitmap(bmp,m.getX(),m.getY(),ALLEGRO_FLIP_HORIZONTAL);
+                                        }
                                         if((m.getX()%16==0 && matrix[(m.getY()/16)+1][m.getX()/16]==0)||(m.getY()%16!=0 && matrix[m.getY()/16+1][m.getX()/16]==1 && matrix[m.getY()/16][m.getX()/16]==0 && matrix[m.getY()/16+2][m.getX()/16]==0)){
                                                 m.setFall(true);
                                                 if(m.getScale())
@@ -310,7 +432,7 @@ class Graphic{
                                 if(m.getX()!=0/*&&m.getY()%16==0*/)/*DIVERSO DA FINE SCHERMO SINISTRO*/{
                                         if(m.getY()%16==0 && matrix[m.getY()/16+1][m.getX()/16]==1 && m.getScale())
                                                 m.setScale(false);
-                                        if(!m.getScale()){
+                                        if(!m.getScale() && !m.getHammer()){
                                                 m.setX(m.getX()-8);
                                                 m.setCont(m.getCont()+1);
                                                 if(m.getCont()==1)
@@ -319,7 +441,7 @@ class Graphic{
                                                         bmp=al_load_bitmap("Sprites/Walk2.png");
                                                         m.setCont(0);}
                                         }
-                                        else{
+                                        else if (m.getScale() && !m.getHammer()){
                                                 m.setX(m.getX()-8);
                                                 m.setCont(m.getCont()+1);
                                                 if(m.getCont()==1)
@@ -327,13 +449,34 @@ class Graphic{
                                                 else{
                                                         bmp=al_load_bitmap("Sprites/Climbing2.png");
                                                         m.setCont(0);}
+                                        }
+                                        else{
+                                                m.setX(m.getX()-8);
+                                                m.setCont(m.getCont()+1);
+                                                        if(m.getCont()==1)
+                                                                bmp=al_load_bitmap("Sprites/Hammer3.png");
+                                                        else{
+                                                                bmp=al_load_bitmap("Sprites/Hammer4.png");
+                                                                m.setCont(0);
+                                                        }
                                         }        
                                         if((m.getX()%16==0 && matrix[(m.getY()/16)+1][m.getX()/16]==0)||(m.getX()%16==0 && m.getY()%16!=0 && matrix[m.getY()/16][m.getX()/16]==0 && matrix[m.getY()/16+1][m.getX()/16]==1 && matrix[m.getY()/16+2][m.getX()/16]==0)){
                                               m.setFall(true);
                                               if(m.getScale())
                                                       m.setScale(false);
                                         }
-                                        al_draw_bitmap(bmp,m.getX(),m.getY(),0);
+                                        if (m.getCont() != 0){
+                                                if (!m.getHammer())
+                                                        al_draw_bitmap(bmp,m.getX(),m.getY(),0);
+                                                else
+                                                        al_draw_bitmap(bmp,m.getX()+16,m.getY()-8,0);
+                                        }
+                                        else {
+                                                if (!m.getHammer())
+                                                        al_draw_bitmap(bmp,m.getX(),m.getY(),0);
+                                                else
+                                                        al_draw_bitmap(bmp,m.getX(),m.getY(),0);
+                                        }
                                         al_destroy_bitmap(bmp);
 
                                 }
@@ -341,9 +484,14 @@ class Graphic{
                                         m.Draw(false);
                                 m.setLeft(false);
                         }
-                        else if((m.getUp()&&m.getFall()==false)){                        
+                        else if(m.getScale()&&matrix[m.getY()/16][m.getX()/16]==0&&(matrix[(m.getY()/16)+1][(m.getX()/16)-1]==2||(matrix[(m.getY()/16)+1][(m.getX()/16)+1]==2&&m.getX()%16==0)||matrix[(m.getY()/16)+1][m.getX()/16]==2)){
+                                m.setFall(true);
+                                m.setUp(false);
+                        }
+                        else if((m.getUp() && !m.getFall() && !m.getHammer())){                        
                                 if(((matrix[m.getY()/16][m.getX()/16]==2 || matrix[m.getY()/16][m.getX()/16]==1)   || (matrix[(m.getY()+8)/16][m.getX()/16]==2 || matrix[(m.getY()+8)/16][m.getX()/16]==1))||(m.getX()%16!=0&&((matrix[m.getY()/16][m.getX()/16+1]==2 || matrix[m.getY()/16][m.getX()/16+1]==1)   || (matrix[(m.getY()+8)/16][m.getX()/16+1]==2 || matrix[(m.getY()+8)/16][m.getX()/16+1]==1)))){
                                         m.setScale(true);
+                                        if(m.getScale()){
                                         m.setY(m.getY()-8);
                                         m.setCont(m.getCont()+1);
                                         if(m.getCont()==1)
@@ -354,6 +502,7 @@ class Graphic{
                                         }
                                         al_draw_bitmap(bmp,m.getX(),m.getY(),0);
                                         al_destroy_bitmap(bmp);
+                                        }
                                 }
                                 else{
                                         if(m.getReverse())
@@ -361,10 +510,9 @@ class Graphic{
                                         else
                                                 m.Draw(false);
                                 }
-                                
                                 m.setUp(false);
                         }
-                        else if(m.getDown()&&m.getFall()==false){
+                        else if(m.getDown() && !m.getFall() && !m.getHammer()){
                                 if((matrix[m.getY()/16][m.getX()/16]==2&&matrix[m.getY()/16+1][m.getX()/16]!=1)||(matrix[m.getY()/16][m.getX()/16]==0&&matrix[m.getY()/16+1][m.getX()/16]==1&&matrix[m.getY()/16+2][m.getX()/16]==2)||(matrix[m.getY()/16][m.getX()/16]==1&&matrix[m.getY()/16+1][m.getX()/16]==2)||(matrix[m.getY()/16][m.getX()/16+1]==2&&matrix[m.getY()/16+1][m.getX()/16+1]!=1)||(m.getX()%16!=0&&matrix[m.getY()/16][m.getX()/16+1]==0&&matrix[m.getY()/16+1][m.getX()/16+1]==1&&matrix[m.getY()/16+2][m.getX()/16+1]==2)||(matrix[m.getY()/16][m.getX()/16+1]==1&&matrix[m.getY()/16+1][m.getX()/16+1]==2)&&m.getX()%16!=0){
                                         m.setScale(true);
                                         m.setY(m.getY()+8);
@@ -389,62 +537,95 @@ class Graphic{
                         }
                         else if(m.getScale())
                         {
-                                if(m.getCont()==1)
+                                if(m.getY()%16==0 && matrix[m.getY()/16][m.getX()/16]==2&&matrix[(m.getY()/16)+1][m.getX()/16]==1){
+                                        m.setScale(false);        
+                                        if(m.getReverse()) 
+                                                m.Draw(true);
+                                        else 
+                                                m.Draw(false);}
+                                else if(m.getY()%16==0 && matrix[m.getY()/16][m.getX()/16]==0&&matrix[(m.getY()/16)+1][m.getX()/16]==1){
+                                        m.setScale(false);
+                                        if(m.getReverse()) 
+                                                m.Draw(true);
+                                        else 
+                                                m.Draw(false);
+                                }
+                                else if(m.getCont()==1){
                                         bmp=al_load_bitmap("Sprites/Climbing1.png");
+                                        al_draw_bitmap(bmp,m.getX(),m.getY(),0);}
                                 else{
                                         bmp=al_load_bitmap("Sprites/Climbing2.png");
                                         m.setCont(0);
+                                        al_draw_bitmap(bmp,m.getX(),m.getY(),0);
                                 }
-                                al_draw_bitmap(bmp,m.getX(),m.getY(),0);
-                                if(m.getY()%16==0 && matrix[m.getY()/16][m.getX()/16]==2&&matrix[(m.getY()/16)+1][m.getX()/16]==1)
-                                        m.setScale(false);        
-                                else if(m.getY()%16==0 && matrix[m.getY()/16][m.getX()/16]==0&&matrix[(m.getY()/16)+1][m.getX()/16]==1)
-                                        m.setScale(false);
                         }
                         else if(m.getReverse())
                                 m.Draw(true);
                         else
                                 m.Draw(false);
-                        if(matrix[m.getY()/16][m.getX()/16]==2&&m.getY()==0){
-                                if(level==1){
-                                        level=2;
-                                        fstream input;
-                                        input.open("Map2.map");
-                                        if (input.is_open())
-                                                input>> x >> y;
-                                        if (input.is_open())
-                                                for (int i=0;i<x;i++)
-                                                        for (int j=0;j<y;j++)
-                                                                input >> matrix[i][j];
-	                                input.close();  
-                                        setDk(dk);
-                                        m.setX(3*pixel);                                   
-                                        m.setY(19*pixel); 
-                                        barrels.clear();                                 
-                                }
-                                else{
-                                        level=3;
-                                        fstream input;
-                                        input.open("Map3.map");
-                                        if (input.is_open())
-                                                input>> x >> y;
-                                        if (input.is_open())
-                                                for (int i=0;i<x;i++)
-                                                        for (int j=0;j<y;j++)
-                                                                input >> matrix[i][j];
-	                                input.close();
-                                        setDk(dk);
-                                        m.setX(3*pixel);                                   
-                                        m.setY(19*pixel);
-                                        barrels.clear(); 
-                                        }
+                        if((matrix[m.getY()/16][(m.getX()/16)-1]==2||matrix[m.getY()/16][(m.getX()/16)+1]==2||matrix[m.getY()/16][m.getX()/16]==2)&&m.getY()==0){
+                                setMap(m,dk);
+                                win = true;
                         }
                         al_set_target_backbuffer(this->display);
                         al_clear_to_color(al_map_rgb(0, 0, 0));
                         al_draw_scaled_bitmap(buffer, 0, 0,(y*pixel) ,(x*pixel), scale_x, scale_y, scale_w, scale_h, 0);
+                
                 }
-                void DrawBarrel(){
+
+                bool getWin () {
+                        return win;
+                }
+
+                void setWin (bool ok) {
+                        win = ok;
+                }
+
+                bool getDeath() {
+                        return death;
+                }
+
+                void setDeath(bool ok) {
+                        death = ok;
+                }
+
+		void setMap(Mario& m,DonkeyKong& dk){
+                if(level==99)
+                        level=0;
+                level++;
+                fstream input;
+                input.open((((string)"Map")+(to_string(level))+((string)".map")).c_str());
+                        if (input.is_open())
+                                input>> x >> y;
+                                if (input.is_open())
+                                        for (int i=0;i<x;i++)
+                                                for (int j=0;j<y;j++)
+                                                        input >> matrix[i][j];
+	                        input.close();  
+                                setDk(dk);
+                                setMario(m); 
+                                barrels.clear();
+                }
+                void setThisMap(Mario& m){
+                fstream input;
+                input.open((((string)"Map")+(to_string(level))+((string)".map")).c_str());
+                        if (input.is_open())
+                                input>> x >> y;
+                                if (input.is_open())
+                                        for (int i=0;i<x;i++)
+                                                for (int j=0;j<y;j++)
+                                                        input >> matrix[i][j];
+	                        input.close();  
+                                setMario(m); 
+                                barrels.clear();
+                }
+
+                void drawLife (int score){
                         al_set_target_bitmap(buffer);
+
+                        const char* a = to_string(score).c_str();
+                        al_draw_textf(font,al_map_rgb(44,117,255),al_get_display_width(display)/4+20,10,0,"LIFE: ");
+                        al_draw_textf(font,al_map_rgb(44,117,255),al_get_display_width(display)/4+80,10,0,"%d",score);
                         
                         al_set_target_backbuffer(this->display);
                         al_clear_to_color(al_map_rgb(0, 0, 0));

@@ -1,6 +1,9 @@
-#include"Entity.h"
 #ifndef BARREL_H
 #define BARREL_H
+
+#include"Entity.h"
+#include<iostream>
+
 
 class Barrel:public Entity{
     private:
@@ -10,10 +13,10 @@ class Barrel:public Entity{
         bool left;
         bool fall;
     public:
-        Barrel(int x, int y):Entity(x,y),cont(0),down(false),right(true),left(false){}
+        Barrel(int x,int y):Entity(x,y),cont(0),down(false),right(true),left(false){}
         int barrelColor(){cont++;if(cont==2)cont=0;return cont;}
         void setRight(bool ok){right=ok;}
-         void setFall(bool ok){fall=ok;}
+        void setFall(bool ok){fall=ok;}
         void setLeft(bool ok){left=ok;}
         void setDown(bool ok){down=ok;}
         bool getLeft(){return left;}
@@ -64,5 +67,18 @@ class Barrel:public Entity{
             if(cont==4)
                 cont=0;
         }
+
+    Barrel operator= (Barrel& b){
+        if (this != &b){
+            this->setX(b.getX());
+            this->setY(b.getY());
+            this->cont = b.cont;
+            this->right = b.right;
+            this->fall = b.fall;
+            this->left = b.left;
+            this->down = b.down;
+        }
+        return *this;
+    }
 };
 #endif

@@ -1,7 +1,10 @@
 #ifndef DONKEYKONG_H
 #define DONKEYKONG_H
+
 #include"Entity.h"
 #include<ctime>
+#include<iostream>
+
 enum difficulty{HARD=1,MEDIUM=3,EASY=5};
 class DonkeyKong: public Entity{
     private:
@@ -10,7 +13,8 @@ class DonkeyKong: public Entity{
         ALLEGRO_BITMAP* bip;
         bool lancia;
     public:
-        DonkeyKong(const int& x=0,const int& y=0):Entity(x,y),cont(0),petto(0),lancia(false){srand((unsigned)time(NULL));}
+        DonkeyKong(int x,int y):Entity(x,y),cont(0),petto(0),lancia(false){
+        srand((unsigned)time(NULL));}
         int getCont(){return cont;}
         int increaseCont(){
             if(cont==30){
