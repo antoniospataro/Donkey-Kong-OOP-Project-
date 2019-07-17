@@ -624,8 +624,8 @@ class Graphic{
                         al_set_target_bitmap(buffer);
 
                         const char* a = to_string(score).c_str();
-                        al_draw_textf(font,al_map_rgb(44,117,255),al_get_display_width(display)/4+20,10,0,"LIFE: ");
-                        al_draw_textf(font,al_map_rgb(44,117,255),al_get_display_width(display)/4+80,10,0,"%d",score);
+                        al_draw_textf(font,al_map_rgb(44,117,255),(y*pixel)/2+(4*pixel),10,0,"LIFE: ");
+                        al_draw_textf(font,al_map_rgb(44,117,255),(y*pixel)/2+(8*pixel),10,0,"%d",score);
                         
                         al_set_target_backbuffer(this->display);
                         al_clear_to_color(al_map_rgb(0, 0, 0));
