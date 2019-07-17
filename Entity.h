@@ -9,12 +9,12 @@ class Entity{
         ALLEGRO_BITMAP* bip;
        
     public:
-        Entity(const int& a=0,const int& b=0):x(a),y(b){}
-        int getX(){return x;}
-        int getY(){return y;}
-        void setX(const int& x){this->x=x;} 
-        void setY(const int& y){this->y=y;}
+        Entity(const int& a,const int& b);
+        int getX();
+        int getY();
+        void setX(const int& x); 
+        void setY(const int& y);
         virtual void Draw(){}
-        ~Entity(){}
+        ~Entity();
 };
 #endif
