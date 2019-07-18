@@ -31,6 +31,7 @@ class Graphic{
                 int level;
                 bool win;
                 bool death;
+                bool bonus;
                 vector<Barrel> barrels;
         public:
                 Graphic (int scaleW,int scaleH,int scaleX,int scaleY,ALLEGRO_BITMAP *buffer,ALLEGRO_DISPLAY *display);
@@ -43,6 +44,8 @@ class Graphic{
                 void drawMario(Mario& m,DonkeyKong& dk);
 
                 bool getWin ();
+
+                bool getBonus ();
 
                 void setWin (bool ok);
 

@@ -115,8 +115,12 @@ void GameManager:: gioco () {
             sound->stopSounds();
             backGroundMusic = true;
         }
-        if (backGroundMusic && !mute){
+        if (backGroundMusic && !mute && !manager->getBonus()){
             sound->startGame();
+            backGroundMusic = false;
+        }
+        if (manager->getBonus()){
+            sound->playWinner();
             backGroundMusic = false;
         }
         if (manager->getWin()){
@@ -239,10 +243,12 @@ void GameManager:: gioco () {
                 change = false;
             }
             manager->drawMap();
-            manager->drawDK(*dk);
+            if(!manager->getBonus())
+                manager->drawDK(*dk);
             manager->drawMario(*mario,*dk);
             manager->drawBarrels(*mario,*dk);
-            manager->drawLife(mario->getLife());
+            if (!manager->getBonus())
+                manager->drawLife(mario->getLife());
             al_flip_display();
         }
     }

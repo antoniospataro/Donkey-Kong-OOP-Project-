@@ -10,6 +10,7 @@ class Sounds
         ALLEGRO_SAMPLE* walking;
         ALLEGRO_SAMPLE* win;
         ALLEGRO_SAMPLE* jump;
+        ALLEGRO_SAMPLE* winner;
         ALLEGRO_SAMPLE_INSTANCE* walkingInstance;
         ALLEGRO_SAMPLE_INSTANCE* jumpInstance;
        
@@ -18,10 +19,11 @@ class Sounds
 
         void startGame();
         void playDeath();
-         void playWin();
+        void playWin();
         void playWalking();
         void playJump();
         void stopSounds();
+        void playWinner();
         ~Sounds();
 
 };

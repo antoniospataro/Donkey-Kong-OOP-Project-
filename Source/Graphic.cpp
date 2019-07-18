@@ -16,6 +16,7 @@ Graphic::Graphic (int scaleW,int scaleH,int scaleX,int scaleY,ALLEGRO_BITMAP *bu
         input.close();
         win = false;
         death = false;
+        bonus = false;
         font = al_load_ttf_font("../Font/myFont.ttf",20,0);
         this->scale_h = scaleH;
         this->scale_w = scaleW;
@@ -157,7 +158,7 @@ void Graphic::drawBarrels(Mario& m,DonkeyKong& dk){
                         m.setLife(m.getLife()-1);
                         if(m.getLife()==0){
                                 level=0;
-                                m.setLife(4);
+                                m.setLife(10);
                                 setMap(m,dk);
                         }
                         else
@@ -169,7 +170,7 @@ void Graphic::drawBarrels(Mario& m,DonkeyKong& dk){
                         m.setLife(m.getLife()-1);
                         if(m.getLife()==0){
                                 level=0;
-                                m.setLife(4);
+                                m.setLife(10);
                                 setMap(m,dk);
                         }
                         else
@@ -183,7 +184,7 @@ void Graphic::drawBarrels(Mario& m,DonkeyKong& dk){
                         m.setLife(m.getLife()-1);
                         if(m.getLife()==0){
                                 level=0;
-                                m.setLife(4);
+                                m.setLife(10);
                                 setMap(m,dk);
                         }
                         else
@@ -544,6 +545,10 @@ void Graphic::drawMario(Mario& m,DonkeyKong& dk){
         if((matrix[m.getY()/16][(m.getX()/16)-1]==2||matrix[m.getY()/16][(m.getX()/16)+1]==2||matrix[m.getY()/16][m.getX()/16]==2)&&m.getY()==0){
                 setMap(m,dk);
                 win = true;
+        } 
+        if(matrix[m.getY()/16][(m.getX()/16)]==6){
+               bonus=true;
+                setMap(m,dk);
         }
         al_set_target_backbuffer(this->display);
         al_clear_to_color(al_map_rgb(0, 0, 0));
@@ -559,6 +564,10 @@ void Graphic::setWin (bool ok) {
         win = ok;
 }
 
+bool Graphic::getBonus () {
+        return bonus;
+}
+
 bool Graphic::getDeath() {
         return death;
 }
@@ -567,9 +576,16 @@ void Graphic::setDeath(bool ok) {
         death = ok;
 }
 
-void Graphic::setMap(Mario& m,DonkeyKong& dk){
-        if(level==99)
+void Graphic::setMap(Mario& m,DonkeyKong& dk){        
+        if(bonus&&level!=9)
+                level=8;
+        if(bonus&&level==9){
                 level=0;
+                bonus=false;
+        }
+        if (!bonus && level == 8){
+                level = 0;
+        }
         level++;
         fstream input;
         input.open(((string)"../Maps/")+(((string)"Map")+(to_string(level))+((string)".map")).c_str());

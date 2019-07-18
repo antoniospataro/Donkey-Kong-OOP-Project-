@@ -1,6 +1,6 @@
 #include "../Headers/Mario.h"
 
-Mario::Mario(int x,int y):Entity(x,y),life(4),cont(0),lancia(0),scale(false),fall(false),right(false),left(false),down(false),hammer(false){srand((unsigned)time(NULL));}
+Mario::Mario(int x,int y):Entity(x,y),life(10),cont(0),lancia(0),scale(false),fall(false),right(false),left(false),down(false),hammer(false){srand((unsigned)time(NULL));}
 
 void Mario::setLife(int j){life=j;}
 void Mario::setJmp(int j){jmp=j;}

@@ -8,10 +8,16 @@ Sounds::Sounds()
     win = al_load_sample("../Sounds/win2.wav");
     walking = al_load_sample("../Sounds/walking2.wav");
     jump = al_load_sample("../Sounds/jump.wav");
+    winner = al_load_sample("../Sounds/winner.wav");
     walkingInstance = al_create_sample_instance(walking);
     jumpInstance= al_create_sample_instance(jump);
     al_attach_sample_instance_to_mixer(walkingInstance, al_get_default_mixer());
     al_attach_sample_instance_to_mixer(jumpInstance, al_get_default_mixer());
+}
+
+void Sounds::playWinner()
+{
+    al_play_sample(winner, 1.0, 0.0,1.0,ALLEGRO_PLAYMODE_ONCE,NULL);
 }
 
 void Sounds::startGame()
