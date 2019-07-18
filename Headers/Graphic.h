@@ -5,6 +5,7 @@
 #include "DonkeyKong.h"
 #include "Barrel.h"
 #include "Mario.h"
+#include "Fire.h"
 #include <fstream>
 #include <iostream>
 #include <vector>
@@ -33,6 +34,7 @@ class Graphic{
                 bool death;
                 bool bonus;
                 vector<Barrel> barrels;
+                vector<Fire> fires;
         public:
                 Graphic (int scaleW,int scaleH,int scaleX,int scaleY,ALLEGRO_BITMAP *buffer,ALLEGRO_DISPLAY *display);
                 void drawMenu (bool start);
@@ -42,9 +44,8 @@ class Graphic{
                 void drawDK(DonkeyKong& dk);
                 void drawBarrels(Mario& m,DonkeyKong& dk);
                 void drawMario(Mario& m,DonkeyKong& dk);
-
                 bool getWin ();
-
+                void drawFires(Mario& m,DonkeyKong& dk);
                 bool getBonus ();
 
                 void setWin (bool ok);

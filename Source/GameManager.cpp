@@ -122,6 +122,7 @@ void GameManager:: gioco () {
         if (manager->getBonus()){
             sound->playWinner();
             backGroundMusic = false;
+
         }
         if (manager->getWin()){
             if(mute)
@@ -144,6 +145,8 @@ void GameManager:: gioco () {
                 al_rest(4);
                 manager->setDeath(false);
                 backGroundMusic=true;
+                keys[RIGHT]=false;
+                keys[LEFT]=false;
                 sound->stopSounds();
             }
         }
@@ -247,6 +250,7 @@ void GameManager:: gioco () {
                 manager->drawDK(*dk);
             manager->drawMario(*mario,*dk);
             manager->drawBarrels(*mario,*dk);
+            manager->drawFires(*mario,*dk);
             if (!manager->getBonus())
                 manager->drawLife(mario->getLife());
             al_flip_display();

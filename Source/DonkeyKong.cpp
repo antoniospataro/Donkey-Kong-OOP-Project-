@@ -10,9 +10,9 @@ int DonkeyKong::increaseCont(){
     cont++;
     if(cont==1)
         lancia=false;
-    if(cont==10&& petto!=(HARD-1)){
+    if(cont==10&& petto!=(EASY-1)){
         cont=0;
-        petto=rand() % HARD;
+        petto=rand() % EASY;
     }
     return cont;
 }

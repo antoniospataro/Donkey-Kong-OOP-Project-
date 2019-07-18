@@ -113,7 +113,11 @@ void Graphic::drawMap ()
                                         bmp=al_load_bitmap("../Sprites/Hammer.png");
                                         al_draw_bitmap(bmp,j*pixel,i*pixel,0);
                                         al_destroy_bitmap(bmp);
-                                        break;                                                       
+                                        break;
+                                
+                                case 5: fires.push_back(Fire (j*pixel,i*pixel));
+                                        matrix[i][j] = 0;
+                                        break;    
                                 default:
                                         break;
                         }                
@@ -121,7 +125,40 @@ void Graphic::drawMap ()
         al_set_target_backbuffer(this->display);
         al_clear_to_color(al_map_rgb(0, 0, 0));
         al_draw_scaled_bitmap(buffer, 0, 0,(y*pixel) ,(x*pixel), scale_x, scale_y, scale_w, scale_h, 0);
-}   
+}
+void Graphic::drawFires(Mario& m,DonkeyKong& dk){
+        if (fires.empty()){
+                return;
+        }
+        al_set_target_bitmap(buffer);
+        for (int i=0;i<fires.size();i++){
+                if(fires[i].getX()==0){
+                        fires[i].setLeft(false);
+                        fires[i].setRight(true);
+                }
+                else if(fires[i].getX()/16==(y-1)){
+                        fires[i].setLeft(true);
+                        fires[i].setRight(false);
+                }
+                fires[i].Draw();
+                if((fires[i].getX() == m.getX() && fires[i].getY() == m.getY()) || (fires[i].getX()+8 == m.getX() && fires[i].getY() == m.getY()) || (fires[i].getX()-8 == m.getX() && fires[i].getY() == m.getY()) || (fires[i].getX() == m.getX() && fires[i].getY()-8 == m.getY()) || (fires[i].getX()+8 == m.getX() && fires[i].getY()-8 == m.getY()) || (fires[i].getX()-8 == m.getX() && fires[i].getY()-8 == m.getY())){
+                        m.setLife(m.getLife()-1);
+                        if(m.getLife()==0){
+                                level=0;
+                                m.setLife(10);
+                                setMap(m,dk);
+                        }
+                        else
+                                setThisMap(m);
+                        fires.clear();
+                        death = true;
+                }
+
+                al_set_target_backbuffer(this->display);
+                al_clear_to_color(al_map_rgb(0, 0, 0));
+                al_draw_scaled_bitmap(buffer, 0, 0,(y*pixel) ,(x*pixel), scale_x, scale_y, scale_w, scale_h, 0);
+        }
+}
 void Graphic::drawDK(DonkeyKong& dk){
         al_set_target_bitmap(buffer);
         dk.Draw();
@@ -222,7 +259,7 @@ void Graphic::drawBarrels(Mario& m,DonkeyKong& dk){
 }
 void Graphic::drawMario(Mario& m,DonkeyKong& dk){
         al_set_target_bitmap(buffer);
-        if(matrix[m.getY()/16][m.getX()/16]==2&&matrix[m.getY()/16+1][m.getX()/16]==2&& !m.getScale())
+        if(matrix[m.getY()/16][m.getX()/16]==2 && matrix[m.getY()/16+1][m.getX()/16]==2 && !m.getScale())
                 m.setFall(true);
         if (matrix[m.getY()/16][m.getX()/16] == 4 || (matrix[m.getY()/16][m.getX()/16-1] == 4 && m.getX()%16 != 0) || (matrix[m.getY()/16][m.getX()/16+1] == 4 && m.getX()%16 != 0)){ 
                 m.setHammer(true);
@@ -244,7 +281,7 @@ void Graphic::drawMario(Mario& m,DonkeyKong& dk){
                 m.setHammer(false);
                 m.setJump(false);
         }
-        if(((matrix[m.getY()/16][m.getX()/16+1]==0&&matrix[m.getY()/16+1][m.getX()/16+1]==2)||(matrix[m.getY()/16][m.getX()/16]==0&&matrix[m.getY()/16+1][m.getX()/16]==2))&&m.getScale())
+        if(((matrix[m.getY()/16][m.getX()/16+1]==0 && matrix[m.getY()/16+1][m.getX()/16+1]==2) || (matrix[m.getY()/16][m.getX()/16]==0&&matrix[m.getY()/16+1][m.getX()/16]==2))&&m.getScale())
         {
                 m.setScale(false);
                 m.setFall(true);
@@ -547,8 +584,9 @@ void Graphic::drawMario(Mario& m,DonkeyKong& dk){
                 win = true;
         } 
         if(matrix[m.getY()/16][(m.getX()/16)]==6){
-               bonus=true;
+                bonus=true;
                 setMap(m,dk);
+                win = true;
         }
         al_set_target_backbuffer(this->display);
         al_clear_to_color(al_map_rgb(0, 0, 0));
@@ -595,7 +633,9 @@ void Graphic::setMap(Mario& m,DonkeyKong& dk){
                         for (int i=0;i<x;i++)
                                 for (int j=0;j<y;j++)
                                         input >> matrix[i][j];
-        input.close();  
+        input.close();
+        if (!fires.empty())
+                fires.clear(); 
         setDk(dk);
         setMario(m); 
         barrels.clear();
