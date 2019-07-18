@@ -7,7 +7,7 @@ GameManager::GameManager (ALLEGRO_DISPLAY *display,ALLEGRO_BITMAP *buffer,int sc
     barrel = new Barrel(0,0);
     mario = new Mario(0,0);
     sound = new Sounds(); 
-    timer = al_create_timer(2.5/FPS);
+    timer = al_create_timer(2.3/FPS);
     sampleInstance = NULL;
     sampleInstanceJump = NULL;
     event_queue = al_create_event_queue();
@@ -143,7 +143,7 @@ void GameManager:: gioco () {
                 sound->stopSounds();
             }
         }
-        if(move && !mute && !mario->getScale())
+        if((keys[RIGHT]||keys[LEFT])&&!mute && !mario->getScale())
             sound->playWalking();
         if(ev.type == ALLEGRO_EVENT_KEY_DOWN)
         {
@@ -157,13 +157,9 @@ void GameManager:: gioco () {
                     break;
                 case ALLEGRO_KEY_RIGHT:
                     keys[RIGHT] = true;
-                    if(!mute)
-                        move=true;
                     break;
                 case ALLEGRO_KEY_LEFT:
                     keys[LEFT] = true;
-                    if(!mute)
-                        move=true;
                     break;
                 case ALLEGRO_KEY_SPACE:
                     keys[SPACE]=true;
@@ -192,11 +188,9 @@ void GameManager:: gioco () {
                     break;
                 case ALLEGRO_KEY_RIGHT:
                     keys[RIGHT] = false;
-                    move=false;
                     break;
                 case ALLEGRO_KEY_LEFT:
                     keys[LEFT] = false;
-                    move=false;
                     break;
                 case ALLEGRO_KEY_SPACE:
                     keys[SPACE]=false;
@@ -247,7 +241,7 @@ void GameManager:: gioco () {
             manager->drawMap();
             manager->drawDK(*dk);
             manager->drawMario(*mario,*dk);
-            manager->drawBarrels(*mario);
+            manager->drawBarrels(*mario,*dk);
             manager->drawLife(mario->getLife());
             al_flip_display();
         }

@@ -130,7 +130,7 @@ void Graphic::drawDK(DonkeyKong& dk){
         al_clear_to_color(al_map_rgb(0, 0, 0));
         al_draw_scaled_bitmap(buffer, 0, 0,(y*pixel) ,(x*pixel), scale_x, scale_y, scale_w, scale_h, 0);
 }
-void Graphic::drawBarrels(Mario& m){
+void Graphic::drawBarrels(Mario& m,DonkeyKong& dk){
         if(barrels.empty())
                 return;
         al_set_target_bitmap(buffer);
@@ -156,20 +156,24 @@ void Graphic::drawBarrels(Mario& m){
                 if((barrels[i].getX()==m.getX() || barrels[i].getX()==m.getX()+8 || barrels[i].getX()==m.getX()-8) && (barrels[i].getY()==m.getY()+8 || barrels[i].getY()==m.getY()-8 || barrels[i].getY()==m.getY()) && !m.getHammer()){
                         m.setLife(m.getLife()-1);
                         if(m.getLife()==0){
-                                level=1;
+                                level=0;
                                 m.setLife(4);
+                                setMap(m,dk);
                         }
-                        setThisMap(m);
+                        else
+                                setThisMap(m);
                         barrels.clear();
                         death = true;
                 }
                 else if (barrels[i].getX()==m.getX()+16 && barrels[i].getY() == m.getY() && m.getHammer() && !m.getReverse()){
                         m.setLife(m.getLife()-1);
                         if(m.getLife()==0){
-                                level=1;
+                                level=0;
                                 m.setLife(4);
+                                setMap(m,dk);
                         }
-                        setThisMap(m);
+                        else
+                                setThisMap(m);
                         death = true;
                         barrels.clear();
                         m.setHammer(false);
@@ -178,10 +182,12 @@ void Graphic::drawBarrels(Mario& m){
                 else if (barrels[i].getX()==m.getX()-16 && barrels[i].getY() == m.getY() && m.getHammer() && m.getReverse()){
                         m.setLife(m.getLife()-1);
                         if(m.getLife()==0){
-                                level=1;
+                                level=0;
                                 m.setLife(4);
+                                setMap(m,dk);
                         }
-                        setThisMap(m);
+                        else
+                                setThisMap(m);
                         death = true;
                         barrels.clear();
                         m.setHammer(false);
@@ -476,9 +482,14 @@ void Graphic::drawMario(Mario& m,DonkeyKong& dk){
                 }
                 m.setUp(false);
         }
-        else if(m.getDown() && !m.getFall() && !m.getHammer()){
-                if((matrix[m.getY()/16][m.getX()/16]==2&&matrix[m.getY()/16+1][m.getX()/16]!=1)||(matrix[m.getY()/16][m.getX()/16]==0&&matrix[m.getY()/16+1][m.getX()/16]==1&&matrix[m.getY()/16+2][m.getX()/16]==2)||(matrix[m.getY()/16][m.getX()/16]==1&&matrix[m.getY()/16+1][m.getX()/16]==2)||(matrix[m.getY()/16][m.getX()/16+1]==2&&matrix[m.getY()/16+1][m.getX()/16+1]!=1)||(m.getX()%16!=0&&matrix[m.getY()/16][m.getX()/16+1]==0&&matrix[m.getY()/16+1][m.getX()/16+1]==1&&matrix[m.getY()/16+2][m.getX()/16+1]==2)||(matrix[m.getY()/16][m.getX()/16+1]==1&&matrix[m.getY()/16+1][m.getX()/16+1]==2)&&m.getX()%16!=0){
+        else if(m.getDown() && !m.getFall() && !m.getHammer()&&m.getX()%16==0/*togliere se si vuole fare andare dai lati delle scale in discesa*/){ 
+                if((matrix[m.getY()/16][m.getX()/16]==2&&matrix[m.getY()/16+1][m.getX()/16]!=1)||(matrix[m.getY()/16][m.getX()/16]==0&&matrix[m.getY()/16+1][m.getX()/16]==1&&matrix[m.getY()/16+2][m.getX()/16]==2)||(matrix[m.getY()/16][m.getX()/16]==1&&matrix[m.getY()/16+1][m.getX()/16]==2)||(matrix[m.getY()/16][m.getX()/16+1]==2&&matrix[m.getY()/16+1][m.getX()/16+1]!=1)||(m.getX()%16!=0&&matrix[m.getY()/16][m.getX()/16+1]==0&&matrix[m.getY()/16+1][m.getX()/16+1]==1&&matrix[m.getY()/16+2][m.getX()/16+1]==2)||(matrix[m.getY()/16][m.getX()/16+1]==1&&matrix[m.getY()/16+1][m.getX()/16+1]==2)&&m.getX()%16!=0)
+                {
                         m.setScale(true);
+                        //se non ci si vuole muovere destra sinistra
+                        m.setRight(false); //messi per impedire che restino in memoria i movimenti
+                        m.setLeft(false);
+                        //fine
                         m.setY(m.getY()+8);
                         m.setCont(m.getCont()+1);
                         if(m.getCont()==1)
@@ -487,8 +498,8 @@ void Graphic::drawMario(Mario& m,DonkeyKong& dk){
                                 bmp=al_load_bitmap("../Sprites/Climbing2.png");
                                 m.setCont(0);
                         }
-                        al_draw_bitmap(bmp,m.getX(),m.getY(),0);
-                        al_destroy_bitmap(bmp);
+                al_draw_bitmap(bmp,m.getX(),m.getY(),0);
+                al_destroy_bitmap(bmp);
                 }
                 else{
                         if(m.getReverse()) 
@@ -500,6 +511,10 @@ void Graphic::drawMario(Mario& m,DonkeyKong& dk){
         }
         else if(m.getScale())
         {
+                //se non ci si vuole muovere destra sinistra
+                        m.setRight(false); //messi per impedire che restino in memoria i movimenti
+                        m.setLeft(false);
+                        //fine
                 if(m.getY()%16==0 && matrix[m.getY()/16][m.getX()/16]==2&&matrix[(m.getY()/16)+1][m.getX()/16]==1){
                         m.setScale(false);        
                         if(m.getReverse()) 
@@ -578,7 +593,7 @@ void Graphic::setThisMap(Mario& m){
                         for (int i=0;i<x;i++)
                                 for (int j=0;j<y;j++)
                                         input >> matrix[i][j];
-        input.close();  
+        input.close();
         setMario(m); 
         barrels.clear();
 }

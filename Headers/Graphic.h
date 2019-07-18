@@ -39,7 +39,7 @@ class Graphic{
                 void setMario(Mario& m);
                 void drawMap();
                 void drawDK(DonkeyKong& dk);
-                void drawBarrels(Mario& m);
+                void drawBarrels(Mario& m,DonkeyKong& dk);
                 void drawMario(Mario& m,DonkeyKong& dk);
 
                 bool getWin ();
