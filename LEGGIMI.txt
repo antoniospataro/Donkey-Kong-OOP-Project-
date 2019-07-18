@@ -1,0 +1,25 @@
+ISTRUZIONI PER CREARE MAPPE CON EDITOR:
+Mario nasce alla destra del barile più in basso;
+DK nasce alla destra di 4 barili più altri a sinistra.
+quattro barili(3) in questa disposizione:
+
+	3 3
+	3 3
+
+Per selezionare gli oggetti premere:
+
+1(travi)
+2(scale)
+3(barili)
+4(martello)
+0(vuoto)
+
+(Premere S per salvare in Home)
+
+
+CREARE MAPPE DA FILE DI TESTO:
+
+Stessi valori da inserire se si vuole creare il livello da file di testo,in più inserire dimensione matrice(24x37, guardare altri file map).
+il file deve essere salvato con estensione ".map"
+
+
