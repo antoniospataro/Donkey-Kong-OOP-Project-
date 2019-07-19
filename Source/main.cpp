@@ -20,13 +20,14 @@ int main(int argc, char **argv)
     if (!al_init_ttf_addon()){
         return -1;
     }
+    int screenWidth = pixel*37; //30 w
+    int screenHeight = pixel*24; //26 h
     ALLEGRO_BITMAP *buffer;
+    buffer = al_create_bitmap(screenWidth,screenHeight);
     if(!buffer){
         cout << "Fatal error, unable to create a buffer";
         return -1;
     }
-    int screenWidth = pixel*37; //30 w
-    int screenHeight = pixel*24; //26 h
     al_set_new_display_flags(ALLEGRO_FULLSCREEN_WINDOW);
     ALLEGRO_DISPLAY *display = al_create_display(screenWidth,screenHeight);
     
@@ -35,8 +36,7 @@ int main(int argc, char **argv)
             return -1;
     }
     
-    buffer = al_create_bitmap(screenWidth,screenHeight);
-	int windowHeight = al_get_display_height(display);
+    int windowHeight = al_get_display_height(display);
     int windowWidth = al_get_display_width(display);
     float sx = windowWidth / float(screenWidth);
     float sy = windowHeight / float(screenHeight);
