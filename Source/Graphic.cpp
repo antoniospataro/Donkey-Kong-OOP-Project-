@@ -95,12 +95,18 @@ void Graphic::drawMap ()
                         switch (matrix[i][j])
                         {
                                 case 1:
-                                        bmp=al_load_bitmap("../Sprites/Floor.png");
+                                        if(level==5)
+                                                bmp=al_load_bitmap("../Sprites/Floor2.png");
+                                        else
+                                                bmp=al_load_bitmap("../Sprites/Floor.png");
                                         al_draw_bitmap(bmp,j*pixel,i*pixel,0);
                                         al_destroy_bitmap(bmp);
                                         break;
                                 case 2:
-                                        bmp=al_load_bitmap("../Sprites/Scale.png");
+                                        if(level==5)
+                                                bmp=al_load_bitmap("../Sprites/Scale2.png");
+                                        else
+                                                bmp=al_load_bitmap("../Sprites/Scale.png");
                                         al_draw_bitmap(bmp,j*pixel,i*pixel,0);
                                         al_destroy_bitmap(bmp);
                                         break;
