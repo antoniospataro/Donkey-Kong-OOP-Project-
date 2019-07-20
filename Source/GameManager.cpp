@@ -170,8 +170,6 @@ void GameManager:: gioco () {
                     break;
                 case ALLEGRO_KEY_SPACE:
                     keys[SPACE]=true;
-                    //if(!mute)
-                        //sound->playJump();
                     break;
                 case ALLEGRO_KEY_S:
                     change = true;

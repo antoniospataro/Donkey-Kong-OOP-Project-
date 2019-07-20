@@ -20,8 +20,8 @@ int main(int argc, char **argv)
     if (!al_init_ttf_addon()){
         return -1;
     }
-    int screenWidth = pixel*37; //30 w
-    int screenHeight = pixel*24; //26 h
+    int screenWidth = pixel*37; // w
+    int screenHeight = pixel*24; // h
     ALLEGRO_BITMAP *buffer;
     buffer = al_create_bitmap(screenWidth,screenHeight);
     if(!buffer){
