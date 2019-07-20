@@ -10,9 +10,9 @@ class Fire:public Entity{
         bool right;
         bool left;
     public:
-        Fire(int x,int y);
-        void setRight(bool ok);
-        void setLeft(bool ok);
+        Fire(const int& x,const int& y);
+        void setRight(const bool& ok);
+        void setLeft(const bool& ok);
         bool getLeft();
         bool getRight();
         void Draw();

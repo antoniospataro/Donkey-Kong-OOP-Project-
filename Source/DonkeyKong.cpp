@@ -1,5 +1,5 @@
 #include "../Headers/DonkeyKong.h"
-DonkeyKong::DonkeyKong(int x,int y):Entity(x,y),cont(0),petto(0),lancia(false){srand((unsigned)time(NULL));}
+DonkeyKong::DonkeyKong(const int& x,const int& y):Entity(x,y),cont(0),petto(0),lancia(false){srand((unsigned)time(NULL));}
 int DonkeyKong::getCont(){return cont;}
 int DonkeyKong::increaseCont(){
     if(cont==30){

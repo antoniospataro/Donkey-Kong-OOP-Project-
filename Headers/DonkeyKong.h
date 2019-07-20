@@ -13,7 +13,7 @@ class DonkeyKong: public Entity{
         ALLEGRO_BITMAP* bip;
         bool lancia;
     public:
-        DonkeyKong(int x,int y);
+        DonkeyKong(const int& x,const int& y);
         int getCont();
         int increaseCont();
         void Draw();

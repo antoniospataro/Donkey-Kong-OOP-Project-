@@ -13,12 +13,12 @@ class Barrel:public Entity{
         bool left;
         bool fall;
     public:
-        Barrel(int x,int y);
+        Barrel(const int& x,const int& y);
         int barrelColor();
-        void setRight(bool ok);
-        void setFall(bool ok);
-        void setLeft(bool ok);
-        void setDown(bool ok);
+        void setRight(const bool& ok);
+        void setFall(const bool& ok);
+        void setLeft(const bool& ok);
+        void setDown(const bool& ok);
         bool getLeft();
         bool getRight();
         bool getDown();

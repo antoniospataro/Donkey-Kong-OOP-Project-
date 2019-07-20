@@ -1,14 +1,14 @@
 #include "../Headers/Fire.h"
 
-Fire::Fire(int x,int y):Entity(x,y),cont(0),right(true),left(false){}
+Fire::Fire(const int& x,const int& y):Entity(x,y),cont(0),right(true),left(false){}
 
 bool Fire::getLeft(){return left;}
 
 bool Fire::getRight(){return right;}
 
-void Fire::setLeft(bool ok){left=ok;}
+void Fire::setLeft(const bool& ok){left=ok;}
 
-void Fire::setRight(bool ok){right=ok;}
+void Fire::setRight(const bool& ok){right=ok;}
 
 void Fire::Draw(){
     if(left==true){ 

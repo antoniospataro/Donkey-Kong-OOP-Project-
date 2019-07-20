@@ -1,21 +1,21 @@
 #include "../Headers/Mario.h"
 
-Mario::Mario(int x,int y):Entity(x,y),life(10),cont(0),lancia(0),scale(false),fall(false),right(false),left(false),down(false),hammer(false){srand((unsigned)time(NULL));}
+Mario::Mario(const int& x,const int& y):Entity(x,y),life(10),cont(0),lancia(0),scale(false),fall(false),right(false),left(false),down(false),hammer(false){srand((unsigned)time(NULL));}
 
-void Mario::setLife(int j){life=j;}
-void Mario::setJmp(int j){jmp=j;}
-void Mario::setSpace(bool spa){space=spa;}
-void Mario::setJump(bool ok){jump=ok;}
-void Mario::setReverse(bool ok){reverse=ok;}
-void Mario::setScale(int c){scale=c;}
-void Mario::setCont(int c){cont=c;}
-void Mario::setFall(bool ok){fall=ok;}
-void Mario::setRight(bool ok){right=ok;}
-void Mario::setLeft(bool ok){left=ok;}
-void Mario::setDown(bool ok){down=ok;}
-void Mario::setUp(bool ok){up=ok;}
-void Mario::setHammer(bool ok){hammer=ok;}
-void Mario::setcontatoreHammer (int cont) {contatoreHammer = cont;}
+void Mario::setLife(const int& j){life=j;}
+void Mario::setJmp(const int& j){jmp=j;}
+void Mario::setSpace(const bool& spa){space=spa;}
+void Mario::setJump(const bool& ok){jump=ok;}
+void Mario::setReverse(const bool& ok){reverse=ok;}
+void Mario::setScale(const int& c){scale=c;}
+void Mario::setCont(const int& c){cont=c;}
+void Mario::setFall(const bool& ok){fall=ok;}
+void Mario::setRight(const bool& ok){right=ok;}
+void Mario::setLeft(const bool& ok){left=ok;}
+void Mario::setDown(const bool& ok){down=ok;}
+void Mario::setUp(const bool& ok){up=ok;}
+void Mario::setHammer(const bool& ok){hammer=ok;}
+void Mario::setcontatoreHammer (const int& cont) {contatoreHammer = cont;}
 bool Mario::getJump(){return jump;}
 bool Mario::getReverse(){return reverse;}
 bool Mario::getFall(){return fall;}
@@ -30,7 +30,7 @@ int Mario::getcontatoreHammer() {return contatoreHammer;}
 int Mario::getCont(){return cont;}
 int Mario::getLife(){return life;}
 int Mario::getJmp(){return jmp;}
-void Mario::Draw(bool ok){
+void Mario::Draw(const bool& ok){
     if (!hammer){
         bip=al_load_bitmap("../Sprites/Walk0.png");
         if(ok)

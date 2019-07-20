@@ -22,23 +22,23 @@ class Mario: public Entity{
         int contatoreHammer;
         int life;
     public:
-        Mario(int x,int y);
-        void setLife(int j);
+        Mario(const int& x,const int& y);
+        void setLife(const int& j);
         int getLife();
-        void setJmp(int j);
+        void setJmp(const int& j);
         int getJmp();
-        void setSpace(bool spa);
-        void setJump(bool ok);
-        void setReverse(bool ok);
-        void setScale(int c);
-        void setCont(int c);
-        void setFall(bool ok);
-        void setRight(bool ok);
-        void setLeft(bool ok);
-        void setDown(bool ok);
-        void setUp(bool ok);
-        void setHammer(bool ok);
-        void setcontatoreHammer (int cont);
+        void setSpace(const bool& spa);
+        void setJump(const bool& ok);
+        void setReverse(const bool& ok);
+        void setScale(const int& c);
+        void setCont(const int& c);
+        void setFall(const bool& ok);
+        void setRight(const bool& ok);
+        void setLeft(const bool& ok);
+        void setDown(const bool& ok);
+        void setUp(const bool& ok);
+        void setHammer(const bool& ok);
+        void setcontatoreHammer (const int& cont);
         bool getJump();
         bool getReverse();
         int getCont();
@@ -51,7 +51,7 @@ class Mario: public Entity{
         bool getSpace();
         bool getHammer();
         int getcontatoreHammer();
-        void Draw(bool ok);
+        void Draw(const bool& ok);
 };
 
 #endif 

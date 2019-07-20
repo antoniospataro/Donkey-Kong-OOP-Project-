@@ -1,10 +1,10 @@
 #include "../Headers/Barrel.h"
-Barrel::Barrel(int x,int y):Entity(x,y),cont(0),down(false),right(true),left(false){}
+Barrel::Barrel(const int& x,const int& y):Entity(x,y),cont(0),down(false),right(true),left(false){}
 int Barrel::barrelColor(){cont++;if(cont==2)cont=0;return cont;}
-void Barrel::setRight(bool ok){right=ok;}
-void Barrel::setFall(bool ok){fall=ok;}
-void Barrel::setLeft(bool ok){left=ok;}
-void Barrel::setDown(bool ok){down=ok;}
+void Barrel::setRight(const bool& ok){right=ok;}
+void Barrel::setFall(const bool& ok){fall=ok;}
+void Barrel::setLeft(const bool& ok){left=ok;}
+void Barrel::setDown(const bool& ok){down=ok;}
 bool Barrel::getLeft(){return left;}
 bool Barrel::getRight(){return right;}
 bool Barrel::getDown(){return down;}
@@ -54,7 +54,7 @@ void Barrel::Draw(){
         cont=0;
 }
 
-Barrel Barrel:: operator= (Barrel& b){
+Barrel Barrel:: operator= ( Barrel& b){
     if (this != &b){
         this->setX(b.getX());
         this->setY(b.getY());

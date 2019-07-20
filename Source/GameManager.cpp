@@ -2,7 +2,7 @@
 extern int x;
 extern int y;
 
-GameManager::GameManager (ALLEGRO_DISPLAY *display,ALLEGRO_BITMAP *buffer,int scaleW,int scaleH,int scaleX,int scaleY){
+GameManager::GameManager (ALLEGRO_DISPLAY *display,ALLEGRO_BITMAP *buffer,const int& scaleW,const int& scaleH,const int& scaleX,const int& scaleY){
     dk = new DonkeyKong(0,0);
     barrel = new Barrel(0,0);
     mario = new Mario(0,0);
@@ -70,44 +70,44 @@ void GameManager::Menu (){
         {
             if (keys[UP])
             {
-                premiStart =  true;
+                pressStart =  true;
             }
             if (keys[DOWN])
             {
-                premiStart = false;
+                pressStart = false;
             }
-            if (keys[ENTER] && premiStart)
+            if (keys[ENTER] && pressStart)
             {
                 menu = false;
             }
-            if (keys[ENTER] && !premiStart)
+            if (keys[ENTER] && !pressStart)
             {
                 menu = false;
-                Esci = true;
+                Exit = true;
             }
             redraw = true;
         }
         else if (ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
         {
             menu = false;
-            Esci = true;
+            Exit = true;
         }
         if (keys[ESCAPE])
         {
             menu = false;
-            Esci = true;
+            Exit = true;
         }
         else if (redraw && al_is_event_queue_empty(event_queue))
         {
             redraw = false;
-            manager->drawMenu(premiStart);
+            manager->drawMenu(pressStart);
             al_flip_display();
         }
     }
 }
 
 void GameManager:: gioco () {
-    while(!Esci)
+    while(!Exit)
     {
         al_wait_for_event(event_queue, &ev);
         if (mute){
@@ -203,7 +203,7 @@ void GameManager:: gioco () {
                     keys[SPACE]=false;
                     break;	
                 case ALLEGRO_KEY_ESCAPE:
-                    Esci = true;
+                    Exit = true;
                     break;
                 default:
                     break;
@@ -211,7 +211,7 @@ void GameManager:: gioco () {
         }
         else if(ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
         {
-            Esci = true;
+            Exit = true;
         }
 
         if(ev.type == ALLEGRO_EVENT_TIMER)

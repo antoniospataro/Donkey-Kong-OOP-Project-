@@ -16,9 +16,9 @@ extern int pixel;
 class GameManager {
 
     private:
-        bool premiStart = true;
+        bool pressStart = true;
         bool menu = true;
-        bool Esci = false;
+        bool Exit = false;
         bool redraw = true;
         bool keys[7] = {false, false, false, false, false, false, false};
         bool backGroundMusic = true;
@@ -26,7 +26,7 @@ class GameManager {
         bool change = false;
         bool mute = false;
         bool move = false;
-        int FPS = 35; //40
+        int FPS = 40; //40
         int score = 0;
 
         ALLEGRO_SAMPLE_INSTANCE* sampleInstance;
@@ -43,7 +43,7 @@ class GameManager {
         Graphic *manager;
     
     public:
-        GameManager (ALLEGRO_DISPLAY *display,ALLEGRO_BITMAP *buffer,int scaleW,int scaleH,int scaleX,int scaleY);
+        GameManager (ALLEGRO_DISPLAY *display,ALLEGRO_BITMAP *buffer,const int& scaleW,const int& scaleH,const int& scaleX,const int& scaleY);
 
         ~GameManager ();
 
