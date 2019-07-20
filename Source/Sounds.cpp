@@ -3,7 +3,7 @@
 Sounds::Sounds()
 {
     al_reserve_samples(5);
-    game = al_load_sample("../Sounds/bacmusic2.wav");
+    game = al_load_sample("../Sounds/background.wav");
     death = al_load_sample("../Sounds/death.wav");
     win = al_load_sample("../Sounds/win2.wav");
     walking = al_load_sample("../Sounds/walking2.wav");

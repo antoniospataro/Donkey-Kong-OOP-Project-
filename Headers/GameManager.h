@@ -30,7 +30,6 @@ class GameManager {
         int score = 0;
 
         ALLEGRO_SAMPLE_INSTANCE* sampleInstance;
-        ALLEGRO_SAMPLE_INSTANCE* sampleInstanceJump;
         ALLEGRO_EVENT_QUEUE *event_queue;
         ALLEGRO_TIMER *timer;
         ALLEGRO_EVENT ev;

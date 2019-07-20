@@ -9,7 +9,6 @@ GameManager::GameManager (ALLEGRO_DISPLAY *display,ALLEGRO_BITMAP *buffer,const 
     sound = new Sounds(); 
     timer = al_create_timer(2.3/FPS);
     sampleInstance = NULL;
-    sampleInstanceJump = NULL;
     event_queue = al_create_event_queue();
     al_register_event_source(event_queue, al_get_keyboard_event_source());
     al_register_event_source(event_queue, al_get_timer_event_source(timer));
