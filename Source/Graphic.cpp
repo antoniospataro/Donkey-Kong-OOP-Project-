@@ -715,7 +715,6 @@ void Graphic::setThisMap(Mario &m) {
 
 void Graphic::drawLife(int life) {
   al_set_target_bitmap(buffer);
-  const char *a = to_string(life).c_str();
   al_draw_ustr(font, al_map_rgb(44, 117, 255), (y * pixel) / 2 + (8 * pixel),
                 10, 0, al_ustr_new("\u2764 ") );
   al_draw_textf(font, al_map_rgb(44, 117, 255), (y * pixel) / 2 + (9 * pixel),
@@ -726,6 +725,20 @@ void Graphic::drawLife(int life) {
   al_draw_scaled_bitmap(buffer, 0, 0, (y * pixel), (x * pixel), scale_x,
                         scale_y, scale_w, scale_h, 0);
 }
+void Graphic::drawLevel() {
+  al_set_target_bitmap(buffer);
+  al_draw_textf(font, al_map_rgb(44, 117, 255), (y * pixel) / 2 + (1 * pixel), 10, 0,
+                "L: ");
+  al_draw_textf(font, al_map_rgb(44, 117, 255), (y * pixel) / 2 + (2 * pixel), 10, 0,
+                "%d", this->level);
+
+  al_set_target_backbuffer(this->display);
+  al_clear_to_color(al_map_rgb(0, 0, 0));
+  al_draw_scaled_bitmap(buffer, 0, 0, (y * pixel), (x * pixel), scale_x,
+                        scale_y, scale_w, scale_h, 0);
+}
+
+
 void Graphic::drawScore(const int &score) {
   al_set_target_bitmap(buffer);
   const char *a = to_string(score).c_str();

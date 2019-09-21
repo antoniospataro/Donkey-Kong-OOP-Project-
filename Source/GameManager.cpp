@@ -226,6 +226,7 @@ void GameManager::gioco() {
       manager->drawMario(*mario, *dk);
       manager->drawBarrels(*mario, *dk);
       manager->drawFires(*mario, *dk);
+      manager->drawLevel();
       if (!manager->getBonus())
         manager->drawLife(mario->getLife());
       al_flip_display();

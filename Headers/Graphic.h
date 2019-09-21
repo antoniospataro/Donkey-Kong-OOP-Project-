@@ -61,6 +61,7 @@ public:
 
   void drawLife(int score);
   void drawScore(const int &score);
+  void drawLevel();
   ~Graphic();
 };
 #endif
