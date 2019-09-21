@@ -22,6 +22,17 @@ Game
 make run
 ```
 
+|key|Action|
+|---|------|
+|Space | Jump |
+|Arrow Up | Climb Stair |
+|Arrow Left | Walk Left |
+|Arrow Right | Walk Right |
+|Esc | Exit |
+|Enter | Enter |
+|s | Change Stage/Map |
+|m | Mute sound |
+
 
 Editor
 ```
@@ -34,8 +45,13 @@ make run-editor
 |2 | Stair |
 |3 | Barrel |
 |r | Reset |
-|s | Save BonusLevel.map|
+|s | Save on DKEditor/core/assets/BonusLevel.map|
 
+Copy the saved map file BonusLevel.map to Maps/Map[N].map 
+
+```
+cp DKEditor/core/assets/BonusLevel.map Maps/Map1.map
+```
 
 Format
 

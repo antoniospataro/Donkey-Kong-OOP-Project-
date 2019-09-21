@@ -18,7 +18,7 @@ Graphic::Graphic(int scaleW, int scaleH, int scaleX, int scaleY,
   win = false;
   death = false;
   bonus = false;
-  font = al_load_ttf_font("../Font/myFont.ttf", 20, 0);
+  font = al_load_ttf_font("../Font/DejaVuSans.ttf", 20, 0);
   this->scale_h = scaleH;
   this->scale_w = scaleW;
   this->scale_x = scaleX;
@@ -716,8 +716,8 @@ void Graphic::setThisMap(Mario &m) {
 void Graphic::drawLife(int life) {
   al_set_target_bitmap(buffer);
   const char *a = to_string(life).c_str();
-  al_draw_textf(font, al_map_rgb(44, 117, 255), (y * pixel) / 2 + (8 * pixel),
-                10, 0, "L: ");
+  al_draw_ustr(font, al_map_rgb(44, 117, 255), (y * pixel) / 2 + (8 * pixel),
+                10, 0, al_ustr_new("\u2764 ") );
   al_draw_textf(font, al_map_rgb(44, 117, 255), (y * pixel) / 2 + (9 * pixel),
                 10, 0, "%d", life);
 
