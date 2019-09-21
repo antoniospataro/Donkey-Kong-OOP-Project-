@@ -1,6 +1,6 @@
 Donkey Kong (OOP Project with Allegro) 
 
-[![Watch the video](https://i.imgur.com/ST0QkxC.png)](https://www.youtube.com/watch?v=RMV6-3SdDWg&t=11s)
+[![Watch the video](https://i.imgur.com/mpIbQy4.png)](https://www.youtube.com/watch?v=RMV6-3SdDWg&t=11s)
 
 
 Tested on Linux (Ubuntu 19.10) / macOS (majove)
@@ -45,7 +45,7 @@ make run-editor
 |2 | Stair |
 |3 | Barrel |
 |r | Reset |
-|s | Save on DKEditor/core/assets/BonusLevel.map|
+|s | Save map on file |
 
 Copy the saved map file BonusLevel.map to Maps/Map[N].map 
 
