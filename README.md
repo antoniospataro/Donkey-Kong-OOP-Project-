@@ -5,7 +5,7 @@ Donkey Kong (OOP Project with Allegro)
 
 Tested on Linux (Ubuntu 19.10) / macOS (majove)
 
-Dep
+# Dep
 
 * Make
 * Java 8+
@@ -15,7 +15,7 @@ Dep
 make dep-install
 ```
 
-Run
+# Run
 
 Game
 ```
