@@ -7,8 +7,13 @@ compile:
 run:	compile
 	cd Source && ./main
 
+run-editor:
+	cd DKEditor && gradle desktop:run
+
 clean:
 	rm -f Source/main
+	cd DKEditor && gradle clean
+
 
 install-allegro:
 ifeq ($(OS),Darwin)
@@ -24,7 +29,7 @@ else
 	sudo apt-get install clang-format
 endif
 
-dep: install-allegro install-formatter
+dep-install: install-allegro install-formatter
 
 format:
 	find . -name '*.cpp' -exec clang-format -style=file -i {} \;

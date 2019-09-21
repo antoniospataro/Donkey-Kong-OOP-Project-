@@ -7,18 +7,45 @@ Tested on Linux (Ubuntu 19.10) / macOS (majove)
 
 Dep
 
+* Make
+* Java 8+
+* Gradle
+
 ```
-make dep
+make dep-install
 ```
 
 Run
 
+Game
 ```
 make run
 ```
+
+
+Editor
+```
+make run-editor
+```
+
+|key|Action|
+|---|------|
+|1 | Floor |
+|2 | Stair |
+|3 | Barrel |
+|r | Reset |
+|s | Save BonusLevel.map|
+
 
 Format
 
 ```
 make format
 ```
+
+
+# Ref 
+
+* https://liballeg.org/a5docs/trunk/
+
+* https://libgdx.badlogicgames.com/download.html
