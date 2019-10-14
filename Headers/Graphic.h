@@ -23,6 +23,8 @@ class Graphic{
                 ALLEGRO_BITMAP* buffer;
                 ALLEGRO_DISPLAY *display;
                 ALLEGRO_FONT* font;
+                int x;
+                int y;
                 int s_y;
                 int s_x;
                 int scale_w;
