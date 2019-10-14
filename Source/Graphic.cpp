@@ -1,17 +1,14 @@
 #include "../Headers/Graphic.h"
-
-int x=0;
-int y=0;
-int pixel=16;
+#define pixel 16
 Graphic::Graphic (int scaleW,int scaleH,int scaleX,int scaleY,ALLEGRO_BITMAP *buffer,ALLEGRO_DISPLAY *display){
         this->level=1;
         fstream input;
         input.open("../Maps/Map1.map");
         if (input.is_open())
-                input>> ::x >> ::y;
+                input>> this.x >> this.y;
         if (input.is_open())
-                for (int i=0;i<x;i++)
-                        for (int j=0;j<y;j++)
+                for (int i=0;i<this.x;i++)
+                        for (int j=0;j<this.y;j++)
                                 input >> matrix[i][j];
         input.close();
         win = false;
@@ -24,44 +21,43 @@ Graphic::Graphic (int scaleW,int scaleH,int scaleX,int scaleY,ALLEGRO_BITMAP *bu
         this->scale_y = scaleY;
         this->buffer = buffer;
         this->display = display;
-        
 }
 void Graphic::drawMenu (bool start)
 {
         al_set_target_bitmap(buffer);
         bmp = al_load_bitmap("../Sprites/dk.png");
-        al_draw_bitmap(bmp,(pixel*x)/2,(pixel*y)/500,0);
+        al_draw_bitmap(bmp,(pixel*this.x)/2,(pixel*this.y)/500,0);
         al_destroy_bitmap(bmp);
         if (start)
         {
                 bmp = al_load_bitmap("../Sprites/Start1.png");
-                al_draw_bitmap(bmp,(pixel*x)/2,(pixel*y)/3,0);
+                al_draw_bitmap(bmp,(pixel*this.x)/2,(pixel*this.y)/3,0);
                 al_destroy_bitmap(bmp);
                 bmp = al_load_bitmap("../Sprites/Exit2.png");
-                al_draw_bitmap(bmp,(pixel*x)/2,(pixel*y)/2,0);
+                al_draw_bitmap(bmp,(pixel*this.x)/2,(pixel*this.y)/2,0);
                 al_destroy_bitmap(bmp);
         }
         if (!start)
         {
                 bmp = al_load_bitmap("../Sprites/Start2.png");
-                al_draw_bitmap(bmp,(pixel*x)/2,(pixel*y)/3,0);
+                al_draw_bitmap(bmp,(pixel*this.x)/2,(pixel*this.y)/3,0);
                 al_destroy_bitmap(bmp);
                 bmp = al_load_bitmap("../Sprites/Exit1.png");
-                al_draw_bitmap(bmp,(pixel*x)/2,(pixel*y)/2,0);
+                al_draw_bitmap(bmp,(pixel*this.x)/2,(pixel*this.y)/2,0);
                 al_destroy_bitmap(bmp);
         }
         al_set_target_backbuffer(this->display);
         al_clear_to_color(al_map_rgb(0, 0, 0));
-        al_draw_scaled_bitmap(buffer, 0, 0,(y*pixel) ,(x*pixel), scale_x, scale_y, scale_w, scale_h, 0);
+        al_draw_scaled_bitmap(buffer, 0, 0,(this.y*pixel) ,(this.x*pixel), scale_x, scale_y, scale_w, scale_h, 0);
 }
 void Graphic::setDk(DonkeyKong& dk){
-        for (int i=0;i<x;i++)
-                for (int j=0;j<y;j++)
+        for (int i=0;i<this.x;i++)
+                for (int j=0;j<this.y;j++)
                         if(matrix[i][j]==3&&matrix[i][j+1]==3){
                                 dk.setX((j+2)*pixel);
                                 dk.setY((i-1)*pixel);
-                                i = x;
-                                j = y;
+                                i = this.x;
+                                j = this.y;
                         }
 }
 void Graphic::setMario(Mario& m){
@@ -69,8 +65,8 @@ void Graphic::setMario(Mario& m){
         m.setJump(false);
         m.setSpace(false);
         m.setJmp(0);
-        for(int i=0;i<x;i++)
-                for(int j=0;j<y;j++)
+        for(int i=0;i<this.x;i++)
+                for(int j=0;j<this.y;j++)
                         if(matrix[i][j]==3){
                                 if(j!=j-1)
                                         if(matrix[i][j+1]==0){
@@ -89,8 +85,8 @@ void Graphic::drawMap ()
 {
         al_set_target_bitmap(buffer);
         al_clear_to_color(al_map_rgb(0, 0, 0));
-        for (int i=0;i<x;i++)
-                for (int j=0;j<y;j++)
+        for (int i=0;i<this.x;i++)
+                for (int j=0;j<this.y;j++)
                 {
                         switch (matrix[i][j])
                         {
@@ -130,7 +126,7 @@ void Graphic::drawMap ()
                 }
         al_set_target_backbuffer(this->display);
         al_clear_to_color(al_map_rgb(0, 0, 0));
-        al_draw_scaled_bitmap(buffer, 0, 0,(y*pixel) ,(x*pixel), scale_x, scale_y, scale_w, scale_h, 0);
+        al_draw_scaled_bitmap(buffer, 0, 0,(this.y*pixel) ,(this.x*pixel), scale_x, scale_y, scale_w, scale_h, 0);
 }
 void Graphic::drawFires(Mario& m,DonkeyKong& dk){
         if (fires.empty()){
@@ -142,7 +138,7 @@ void Graphic::drawFires(Mario& m,DonkeyKong& dk){
                         fires[i].setLeft(false);
                         fires[i].setRight(true);
                 }
-                else if(fires[i].getX()/16==(y-1)){
+                else if(fires[i].getX()/16==(this.y-1)){
                         fires[i].setLeft(true);
                         fires[i].setRight(false);
                 }
@@ -162,7 +158,7 @@ void Graphic::drawFires(Mario& m,DonkeyKong& dk){
 
                 al_set_target_backbuffer(this->display);
                 al_clear_to_color(al_map_rgb(0, 0, 0));
-                al_draw_scaled_bitmap(buffer, 0, 0,(y*pixel) ,(x*pixel), scale_x, scale_y, scale_w, scale_h, 0);
+                al_draw_scaled_bitmap(buffer, 0, 0,(this.y*pixel) ,(this.x*pixel), scale_x, scale_y, scale_w, scale_h, 0);
         }
 }
 void Graphic::drawDK(DonkeyKong& dk){
@@ -172,7 +168,7 @@ void Graphic::drawDK(DonkeyKong& dk){
                 barrels.push_back(Barrel(dk.getX()+48,dk.getY()+32));}       
         al_set_target_backbuffer(this->display);
         al_clear_to_color(al_map_rgb(0, 0, 0));
-        al_draw_scaled_bitmap(buffer, 0, 0,(y*pixel) ,(x*pixel), scale_x, scale_y, scale_w, scale_h, 0);
+        al_draw_scaled_bitmap(buffer, 0, 0,(this.y*pixel) ,(this.x*pixel), scale_x, scale_y, scale_w, scale_h, 0);
 }
 void Graphic::drawBarrels(Mario& m,DonkeyKong& dk){
         if(barrels.empty())
@@ -184,7 +180,7 @@ void Graphic::drawBarrels(Mario& m,DonkeyKong& dk){
                         barrels[i].setLeft(false);
                         barrels[i].setRight(true);
                 }
-                else if(barrels[i].getX()/16==(y-1)){
+                else if(barrels[i].getX()/16==(this.y-1)){
                         barrels[i].setLeft(true);
                         barrels[i].setRight(false);
                 }
@@ -261,7 +257,7 @@ void Graphic::drawBarrels(Mario& m,DonkeyKong& dk){
         }
         al_set_target_backbuffer(this->display);
         al_clear_to_color(al_map_rgb(0, 0, 0));
-        al_draw_scaled_bitmap(buffer, 0, 0,(y*pixel) ,(x*pixel), scale_x, scale_y, scale_w, scale_h, 0);
+        al_draw_scaled_bitmap(buffer, 0, 0,(this.y*pixel) ,(this.x*pixel), scale_x, scale_y, scale_w, scale_h, 0);
 }
 void Graphic::drawMario(Mario& m,DonkeyKong& dk){
         al_set_target_bitmap(buffer);
@@ -302,7 +298,7 @@ void Graphic::drawMario(Mario& m,DonkeyKong& dk){
                 bmp=al_load_bitmap("../Sprites/Walk2.png");
                 if(m.getRight())
                 {
-                        if(m.getJmp()<3&&m.getX()!=y*pixel-16){
+                        if(m.getJmp()<3&&m.getX()!=this.y*pixel-16){
                                 m.setY(m.getY()-8);
                                 m.setX(m.getX()+8); }                                              
                         al_draw_bitmap(bmp,m.getX(),m.getY(),ALLEGRO_FLIP_HORIZONTAL);
@@ -334,7 +330,7 @@ void Graphic::drawMario(Mario& m,DonkeyKong& dk){
                 if(m.getSpace())
                         m.setSpace(false);
                 m.setY(m.getY()+8);
-                if(m.getRight()&&m.getX()!=(y*16)-16&&(m.getJmp()==4||m.getJmp()==5||m.getJmp()==6)){
+                if(m.getRight()&&m.getX()!=(this.y*16)-16&&(m.getJmp()==4||m.getJmp()==5||m.getJmp()==6)){
                         m.setX(m.getX()+8);
                         m.setRight(false);}
                 else if(m.getLeft()&&m.getX()!=0&&(m.getJmp()==4||m.getJmp()==5||m.getJmp()==6)){
@@ -349,7 +345,7 @@ void Graphic::drawMario(Mario& m,DonkeyKong& dk){
                 if(m.getSpace())
                         m.setSpace(false);
                 m.setY(m.getY()+8);
-                if(m.getRight()&&m.getX()!=(y*16)-16&&(m.getJmp()==4||m.getJmp()==5||m.getJmp()==6)){
+                if(m.getRight()&&m.getX()!=(this.y*16)-16&&(m.getJmp()==4||m.getJmp()==5||m.getJmp()==6)){
                         m.setX(m.getX()+8);
                         m.setRight(false);}
                 else if(m.getLeft()&&m.getX()!=0&&(m.getJmp()==4||m.getJmp()==5||m.getJmp()==6)){
@@ -364,7 +360,7 @@ void Graphic::drawMario(Mario& m,DonkeyKong& dk){
                 if(m.getFall()==false&&m.getJump()==false){
                         m.setJump(true);
                           if(m.getReverse()){
-                                if(m.getRight()&&m.getX()!=(y*16)-16){
+                                if(m.getRight()&&m.getX()!=(this.y*16)-16){
                                         m.setY(m.getY()-8);
                                         m.setX(m.getX()+8);
                                 }
@@ -389,7 +385,7 @@ void Graphic::drawMario(Mario& m,DonkeyKong& dk){
         else if(m.getRight()&&m.getFall()==false&&!m.getScale()/*togliere se si vuole muovere nelle scale*/)
         {
                 m.setReverse(true);
-                if(m.getX()!=(y*16)-16/*&&m.getY()%16==0*/)/*DIVERSO DA FINE SCHERMO*/{
+                if(m.getX()!=(this.y*16)-16/*&&m.getY()%16==0*/)/*DIVERSO DA FINE SCHERMO*/{
                         if(m.getY()%16==0 && matrix[m.getY()/16+1][m.getX()/16]==1 && m.getScale())
                                 m.setScale(false);
                         if(!m.getScale() && !m.getHammer()){
@@ -437,7 +433,7 @@ void Graphic::drawMario(Mario& m,DonkeyKong& dk){
                         }
                         al_destroy_bitmap(bmp);
                 }
-                else if(m.getX()==(y*16)-16)
+                else if(m.getX()==(this.y*16)-16)
                         m.Draw(true);
                 m.setRight(false);
         }
@@ -596,7 +592,7 @@ void Graphic::drawMario(Mario& m,DonkeyKong& dk){
         }
         al_set_target_backbuffer(this->display);
         al_clear_to_color(al_map_rgb(0, 0, 0));
-        al_draw_scaled_bitmap(buffer, 0, 0,(y*pixel) ,(x*pixel), scale_x, scale_y, scale_w, scale_h, 0);
+        al_draw_scaled_bitmap(buffer, 0, 0,(this.y*pixel) ,(this.x*pixel), scale_x, scale_y, scale_w, scale_h, 0);
 
 }
 
@@ -634,10 +630,10 @@ void Graphic::setMap(Mario& m,DonkeyKong& dk){
         fstream input;
         input.open(((string)"../Maps/")+(((string)"Map")+(to_string(level))+((string)".map")).c_str());
         if (input.is_open())
-                input>> x >> y;
+                input>> this.x >> this.y;
                 if (input.is_open())
-                        for (int i=0;i<x;i++)
-                                for (int j=0;j<y;j++)
+                        for (int i=0;i<this.x;i++)
+                                for (int j=0;j<this.y;j++)
                                         input >> matrix[i][j];
         input.close();
         if (!fires.empty())
@@ -650,10 +646,10 @@ void Graphic::setThisMap(Mario& m){
         fstream input;
         input.open(((string)"../Maps/")+(((string)"Map")+(to_string(level))+((string)".map")).c_str());
         if (input.is_open())
-                input>> x >> y;
+                input>> this.x >> this.y;
                 if (input.is_open())
-                        for (int i=0;i<x;i++)
-                                for (int j=0;j<y;j++)
+                        for (int i=0;i<this.x;i++)
+                                for (int j=0;j<this.y;j++)
                                         input >> matrix[i][j];
         input.close();
         setMario(m); 
@@ -663,22 +659,22 @@ void Graphic::setThisMap(Mario& m){
 void Graphic::drawLife (int life){
         al_set_target_bitmap(buffer);
         const char* a = to_string(life).c_str();
-        al_draw_textf(font,al_map_rgb(44,117,255),(y*pixel)/2+(8*pixel),10,0,"L: ");
-        al_draw_textf(font,al_map_rgb(44,117,255),(y*pixel)/2+(9*pixel),10,0,"%d",life);
+        al_draw_textf(font,al_map_rgb(44,117,255),(this.y*pixel)/2+(8*pixel),10,0,"L: ");
+        al_draw_textf(font,al_map_rgb(44,117,255),(this.y*pixel)/2+(9*pixel),10,0,"%d",life);
         
         al_set_target_backbuffer(this->display);
         al_clear_to_color(al_map_rgb(0, 0, 0));
-        al_draw_scaled_bitmap(buffer, 0, 0,(y*pixel) ,(x*pixel), scale_x, scale_y, scale_w, scale_h, 0);
+        al_draw_scaled_bitmap(buffer, 0, 0,(this.y*pixel) ,(this.x*pixel), scale_x, scale_y, scale_w, scale_h, 0);
 }
 void Graphic::drawScore(const int& score){
          al_set_target_bitmap(buffer);
         const char* a = to_string(score).c_str();
-        al_draw_textf(font,al_map_rgb(0,0,0),(y*pixel)/2+(8*pixel),10,0,"Bonus: ");
-        al_draw_textf(font,al_map_rgb(0,0,0),(y*pixel)/2+(9*pixel),10,0,"%d",score);
+        al_draw_textf(font,al_map_rgb(0,0,0),(this.y*pixel)/2+(8*pixel),10,0,"Bonus: ");
+        al_draw_textf(font,al_map_rgb(0,0,0),(this.y*pixel)/2+(9*pixel),10,0,"%d",score);
         
         al_set_target_backbuffer(this->display);
         al_clear_to_color(al_map_rgb(0, 0, 0));
-        al_draw_scaled_bitmap(buffer, 0, 0,(y*pixel) ,(x*pixel), scale_x, scale_y, scale_w, scale_h, 0);
+        al_draw_scaled_bitmap(buffer, 0, 0,(this.y*pixel) ,(this.x*pixel), scale_x, scale_y, scale_w, scale_h, 0);
 
 }
 Graphic::~Graphic(){}   
